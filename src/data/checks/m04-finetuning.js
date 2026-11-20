@@ -1,0 +1,317 @@
+// End-of-lesson comprehension checks for Module 4: Fine-Tuning. Keyed by lesson id.
+export default {
+  "when-to-finetune": [
+    {
+      q: "A legal-tech team wants answers to cite the exact clause of a contract the user uploaded a minute ago. Which approach fits?",
+      opts: [
+        "LoRA fine-tuning on a corpus of contracts",
+        "Retrieval-augmented generation over the uploaded document",
+        "Continued pretraining on legal text",
+        "Full fine-tuning with a higher learning rate",
+      ],
+      a: 1,
+      why: "Fresh, per-user, citable knowledge is the textbook case for [[rag|RAG]]: the document is retrieved at query time and can be quoted.",
+      distract: "Any **training** approach freezes knowledge at training time, cannot see a document uploaded a minute ago and gives no citations.",
+    },
+    {
+      q: "A prompted 70B model produces perfect JSON for an extraction task, but cost and latency are too high. What is usually the most cost-effective next step?",
+      opts: [
+        "Continued pretraining of a 7B model on the documents",
+        "Pretraining a small model from scratch on the extraction format",
+        "Fine-tuning a small model with LoRA on a few thousand input/JSON examples",
+        "Adding RAG to the 70B model",
+      ],
+      a: 2,
+      why: "Format and narrow-task behaviour is what [[peft|PEFT]] does well: a small LoRA-tuned model can match a large prompted model on a narrow task at a fraction of the inference cost.",
+      distract: "**Continued pretraining** and **pretraining** target knowledge/language gaps at far higher cost. **RAG** adds context but keeps the expensive 70B model.",
+    },
+    {
+      q: "Using the 6·N·D rule, roughly how many training FLOPs does SFT of a 1B-parameter model on 50M tokens need?",
+      opts: [
+        "3 × 10¹⁷",
+        "5 × 10¹⁶",
+        "3 × 10¹⁵",
+        "3 × 10¹⁹",
+      ],
+      a: 0,
+      why: "6 × 1e9 × 5e7 = 3e17 FLOPs — about 15 minutes at an achieved 350 TFLOP/s.",
+      distract: "The other values are off by one or more orders of magnitude (dropping the 6, or a factor of 10–100 in N or D).",
+    },
+    {
+      q: "You have 800 high-quality examples and want to adjust tone while keeping chat skills and safety behaviour. Which starting checkpoint is usually best?",
+      opts: [
+        "The base model, because it has not been biased by alignment",
+        "A model pretrained from scratch on your 800 examples",
+        "Either — with 800 examples the starting point does not matter",
+        "The instruct model, fine-tuned with its own chat template",
+      ],
+      a: 3,
+      why: "With little data and a small behaviour change, start from the [[instruct-model|instruct model]] and use its exact chat template so existing chat and safety behaviour carry over.",
+      distract: "A **base model** would need to learn turn-taking from only 800 examples. **Pretraining from scratch** on 800 examples is impossible. The starting point matters most when data is small.",
+    },
+    {
+      q: "Which statement about fine-tuning and knowledge is most accurate?",
+      opts: [
+        "Fine-tuning on a few thousand examples is the most reliable way to add new facts",
+        "Fine-tuning reliably teaches behaviour and format, but is a weak, hard-to-update way to add facts",
+        "Fine-tuning cannot change a model's output format, only its knowledge",
+        "RAG and fine-tuning are mutually exclusive in one system",
+      ],
+      a: 1,
+      why: "Small-scale fine-tuning shapes behaviour, style and task skill; facts are better supplied by RAG (or, at large scale, [[continued-pretraining|continued pretraining]]). Many systems combine RAG with light fine-tuning.",
+      distract: "Fine-tuning for facts often raises hallucination. Format is exactly what fine-tuning changes most easily. RAG and fine-tuning are commonly combined.",
+    },
+  ],
+
+  "full-sft": [
+    {
+      q: "In SFT with completion-only loss, what happens to the prompt tokens?",
+      opts: [
+        "They are removed from the input entirely",
+        "They are fed to the model but their labels are set to −100 so they add nothing to the loss",
+        "They are weighted at 50% of the response tokens",
+        "They are replaced by padding tokens",
+      ],
+      a: 1,
+      why: "The model must read the prompt to condition on it, but only the response tokens are scored: label −100 is ignored by the cross-entropy loss.",
+      distract: "Removing or padding the prompt would destroy the conditioning. There is no 50% weighting in the standard objective.",
+    },
+    {
+      q: "What learning-rate range is typical for full fine-tuning of a 0.5B–8B model?",
+      opts: [
+        "1e-3 – 3e-3",
+        "1e-4 – 2e-4",
+        "1e-5 – 2e-5",
+        "1e-8 – 1e-7",
+      ],
+      a: 2,
+      why: "Full fine-tuning updates every pretrained weight, so it uses small steps around 1e-5–2e-5.",
+      distract: "**1e-4–2e-4** is the LoRA range; **1e-3** would wreck pretrained weights; **1e-8** would barely move them.",
+    },
+    {
+      q: "After SFT, the model gives good answers but never stops generating and starts writing a new user turn. What is the most likely cause?",
+      opts: [
+        "The learning rate was too low",
+        "Packing was disabled",
+        "The eval set was too small",
+        "The end-of-turn token was not learned or is not used as a stop token at generation time",
+      ],
+      a: 3,
+      why: "The model must learn to emit the template's end-of-turn token (e.g. `<|im_end|>`) and generation must stop on it (`eos_token_id`).",
+      distract: "A low LR or disabled packing affect speed and quality, not stopping. Eval-set size affects measurement, not generation.",
+    },
+    {
+      q: "Why does the lab load the model in fp32 before full fine-tuning with bf16=True?",
+      opts: [
+        "So the Trainer keeps fp32 master weights that can absorb tiny updates, while computing in bf16",
+        "Because TRL cannot train models stored in bf16",
+        "Because fp32 is faster than bf16 on modern GPUs",
+        "To make the saved checkpoint smaller",
+      ],
+      a: 0,
+      why: "bf16 has an 8-bit mantissa, so updates of ~1e-5 relative size often round away. Mixed precision keeps fp32 masters and autocasts compute to bf16.",
+      distract: "TRL can train bf16 models (e.g. with LoRA). fp32 is slower, not faster. fp32 checkpoints are larger.",
+    },
+    {
+      q: "Why might `assistant_only_loss=True` fail with the Qwen2.5 chat template, and what is the portable alternative for single-turn data?",
+      opts: [
+        "Qwen models do not support loss masking; use full-sequence loss",
+        "It requires packing; enable packing=True",
+        "The template lacks `{% generation %}` markers; use the conversational prompt–completion format instead",
+        "It only works on CPU; train on CPU instead",
+      ],
+      a: 2,
+      why: "TRL locates assistant spans via generation markers in the Jinja template. The prompt–completion format masks the prompt without needing them.",
+      distract: "Any causal LM supports label masking. Packing is unrelated. Device has nothing to do with it.",
+    },
+  ],
+
+  "lora-qlora": [
+    {
+      q: "How many LoRA parameters does rank r = 8 add to a 4096 × 4096 weight matrix?",
+      opts: [
+        "32,768",
+        "65,536",
+        "131,072",
+        "16,777,216",
+      ],
+      a: 1,
+      why: "r·(d + k) = 8 × (4096 + 4096) = 65,536.",
+      distract: "**32,768** is r × 4096 (only A). **131,072** is the r = 16 value. **16.8M** is the full matrix.",
+    },
+    {
+      q: "What does the LoRA scaling factor α/r do?",
+      opts: [
+        "Sets how many layers receive adapters",
+        "Determines the quantization bit-width of the base",
+        "Controls the dropout probability inside the adapter",
+        "Multiplies the BA update so its magnitude stays roughly stable as r changes",
+      ],
+      a: 3,
+      why: "The forward pass is W₀x + (α/r)BAx; keeping α proportional to r keeps the update scale (and the good LR) roughly constant when you change the rank.",
+      distract: "Which layers get adapters is `target_modules`. Bit-width is a BitsAndBytes setting. Dropout is `lora_dropout`.",
+    },
+    {
+      q: "What does double quantization in QLoRA quantize?",
+      opts: [
+        "The per-block scaling constants used by the 4-bit weights",
+        "The LoRA A and B matrices",
+        "The gradients during the backward pass",
+        "The KV cache during generation",
+      ],
+      a: 0,
+      why: "[[double-quantization|Double quantization]] stores the fp32 per-block absmax constants in 8 bits, cutting their overhead from ~0.5 to ~0.127 bits per parameter.",
+      distract: "LoRA matrices stay in higher precision. Gradients and the KV cache are not what QLoRA's double quantization targets.",
+    },
+    {
+      q: "Approximately how much memory do the frozen base weights of a 7B model take under QLoRA (NF4 with double quantization)?",
+      opts: [
+        "≈ 14 GB",
+        "≈ 7 GB",
+        "≈ 3.6 GB",
+        "≈ 1 GB",
+      ],
+      a: 2,
+      why: "4 bits = 0.5 bytes per parameter → 3.5 GB, plus ≈ 0.1 GB of quantization constants.",
+      distract: "**14 GB** is bf16; **7 GB** is INT8; **1 GB** would require about 1 bit per parameter.",
+    },
+    {
+      q: "You trained a QLoRA adapter and want to ship a single standalone model. What is the recommended merge procedure?",
+      opts: [
+        "Merge the adapter directly into the 4-bit NF4 base and save that",
+        "Average the adapter weights with the base weights",
+        "Ship the adapter alone; it contains the full model",
+        "Reload the base in bf16/fp16, attach the adapter with PeftModel and call merge_and_unload",
+      ],
+      a: 3,
+      why: "Merging into a higher-precision copy keeps the update; merging into NF4 would re-quantize W₀ + ΔW and lose much of it. Then evaluate the merged model.",
+      distract: "**Averaging** is not how LoRA works. The adapter alone is tens of MB and needs the base to run.",
+    },
+  ],
+
+  alignment: [
+    {
+      q: "In the classic RLHF pipeline, what is the order of stages?",
+      opts: [
+        "Reward model → SFT → PPO",
+        "SFT → reward model → PPO with a KL penalty to the SFT model",
+        "PPO → SFT → reward model",
+        "DPO → reward model → SFT",
+      ],
+      a: 1,
+      why: "SFT produces the starting policy and reference; a [[reward-model|reward model]] is trained on human comparisons; [[ppo|PPO]] then optimises reward − β·KL.",
+      distract: "The reward model needs SFT samples to compare, and PPO needs both a policy and a reward model, so the other orders cannot work. DPO replaces the RM+PPO stages.",
+    },
+    {
+      q: "Which models must be held during DPO training (without PEFT)?",
+      opts: [
+        "Policy and frozen reference model",
+        "Policy, reference, reward model and value model",
+        "Policy and reward model",
+        "Policy and value model",
+      ],
+      a: 0,
+      why: "[[dpo|DPO]] needs log-probs from the policy and a frozen [[reference-model|reference]]; no reward or value model is used.",
+      distract: "Four models is **PPO**-based RLHF. Reward or value models are exactly what DPO eliminates.",
+    },
+    {
+      q: "In GRPO, how is a sampled answer's advantage computed?",
+      opts: [
+        "From a learned value model's estimate",
+        "As the difference between chosen and rejected log-probabilities",
+        "As its reward normalised by the mean and standard deviation of rewards in its group of answers to the same prompt",
+        "As the KL divergence between the policy and the reference",
+      ],
+      a: 2,
+      why: "[[grpo|GRPO]] uses the group as the baseline: Aᵢ = (rᵢ − mean)/std, removing the critic.",
+      distract: "A value model is **PPO**. Chosen/rejected log-ratios are **DPO**. KL is a regulariser, not the advantage.",
+    },
+    {
+      q: "During RL fine-tuning, average response length doubles and the reward model's score rises, but human raters prefer the older model. What is happening?",
+      opts: [
+        "Catastrophic forgetting of the tokenizer",
+        "The KL penalty is too strong",
+        "The learning rate is too low",
+        "Reward hacking — the policy exploits a length bias in the reward model",
+      ],
+      a: 3,
+      why: "[[reward-hacking|Reward hacking]]: the reward goes up while true quality does not. Length bias is a common exploit; use length normalisation, KL constraints and independent evals.",
+      distract: "A **strong KL** would keep the model closer to the reference, not let it drift. A **low LR** slows change. Tokenizers are not trained during RL.",
+    },
+    {
+      q: "Which method aligns preferences without any reference model by adding an odds-ratio term to the SFT loss?",
+      opts: [
+        "ORPO",
+        "KTO",
+        "PPO",
+        "DPO",
+      ],
+      a: 0,
+      why: "[[orpo|ORPO]] combines SFT and preference optimisation in one stage with an odds-ratio penalty and no reference model.",
+      distract: "**KTO** and **DPO** use a reference model; **PPO** uses a reference plus reward and value models.",
+    },
+  ],
+
+  "nemo-customization": [
+    {
+      q: "Which PEFT method learns vectors that rescale keys, values and FFN activations, adding no new matrices?",
+      opts: [
+        "Adapters",
+        "IA3",
+        "Prefix tuning",
+        "LoRA",
+      ],
+      a: 1,
+      why: "[[ia3|IA3]] multiplies activations element-wise by learned vectors — the smallest parameter count of the common PEFT methods.",
+      distract: "**Adapters** add bottleneck MLPs, **prefix tuning** adds per-layer K/V prefixes, **LoRA** adds low-rank matrices.",
+    },
+    {
+      q: "What is the difference between prompt tuning and prefix tuning?",
+      opts: [
+        "Prompt tuning updates all weights; prefix tuning freezes them",
+        "Prefix tuning only works for encoder models",
+        "They are identical; the names are interchangeable",
+        "Prompt tuning learns soft embeddings at the input layer only; prefix tuning learns key/value prefixes at every layer",
+      ],
+      a: 3,
+      why: "[[prompt-tuning|Prompt tuning]] prepends trainable input embeddings; [[prefix-tuning|prefix tuning]] injects trainable prefixes into every attention layer, which is much stronger for smaller models.",
+      distract: "Both freeze the base model. Prefix tuning works with decoder-only models. They differ in depth, so they are not interchangeable.",
+    },
+    {
+      q: "In a NeMo 2.0 fine-tuning recipe, how do you switch from LoRA to full SFT?",
+      opts: [
+        "Set peft_scheme to \"none\"",
+        "Use a different NeMo container",
+        "Convert the checkpoint to Hugging Face format first",
+        "Set num_gpus_per_node to 1",
+      ],
+      a: 0,
+      why: "`finetune_recipe(..., peft_scheme=\"lora\")` gives LoRA; `peft_scheme=\"none\"` gives full fine-tuning with the same recipe.",
+      distract: "The container, checkpoint format and GPU count do not select the fine-tuning method.",
+    },
+    {
+      q: "Which observation is the clearest sign of catastrophic forgetting rather than overfitting?",
+      opts: [
+        "Training loss is lower than validation loss on the task",
+        "Validation loss on the task rises after epoch 2",
+        "Task accuracy improves, but scores on general benchmarks unrelated to the task drop",
+        "The model repeats training examples verbatim",
+      ],
+      a: 2,
+      why: "[[catastrophic-forgetting|Forgetting]] is the loss of *other* capabilities; you see it only when evaluating outside the task.",
+      distract: "Rising task validation loss and verbatim repetition are [[overfitting|overfitting]] signs; a train/val gap alone is normal.",
+    },
+    {
+      q: "Which mitigation does NOT help against catastrophic forgetting?",
+      opts: [
+        "Mixing general instruction data into the fine-tuning set",
+        "Using LoRA instead of full fine-tuning",
+        "Lowering the learning rate",
+        "Training for more epochs at a higher learning rate",
+      ],
+      a: 3,
+      why: "More epochs at a higher LR move the weights further from the pretrained optimum — the opposite of what you want.",
+      distract: "**Replay**, **PEFT** and a **lower LR** are all standard mitigations.",
+    },
+  ],
+}

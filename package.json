@@ -1,0 +1,21 @@
+{
+  "name": "nvidia-ncp-genl-llm-training",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Learn to train and fine-tune small LLMs, mapped to the NVIDIA-Certified Professional: Generative AI LLMs (NCP-GENL) exam.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.8"
+  }
+}

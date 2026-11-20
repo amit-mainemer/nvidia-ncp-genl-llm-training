@@ -1,0 +1,14 @@
+{
+  "name": "NCP-GENL Academy",
+  "short_name": "NCP-GENL",
+  "description": "Learn to train and fine-tune small LLMs — study platform for the NVIDIA-Certified Professional: Generative AI LLMs (NCP-GENL) exam.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070b12",
+  "theme_color": "#070b12",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

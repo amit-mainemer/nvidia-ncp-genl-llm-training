@@ -1,0 +1,317 @@
+// End-of-lesson comprehension checks for Module 3: GPU Acceleration and Optimization. Keyed by lesson id.
+export default {
+  'memory-math': [
+    {
+      q: 'In bf16 mixed-precision training with AdamW, which breakdown gives the standard 16 bytes per parameter?',
+      opts: [
+        '4 fp32 weights + 4 fp32 gradients + 8 for the two Adam moments stored in bf16',
+        '2 bf16 weights + 2 bf16 gradients + 12 for the fp32 master weights and two fp32 Adam moments',
+        '2 bf16 weights + 4 fp32 gradients + 10 for optimizer metadata and communication buffers',
+        '8 for fp32 weights stored twice + 8 for gradients kept in both fp32 and bf16',
+      ],
+      a: 1,
+      why: 'Working weights and gradients are 16-bit (2 + 2); the optimizer keeps an fp32 master copy plus fp32 m and v (4 + 4 + 4 = 12). Total 16 bytes per [[parameters|parameter]] before activations.',
+      distract: 'Adam moments are not stored in bf16 in the standard recipe. Gradients are not fp32 and there is no 10-byte "metadata". Weights are not stored twice in fp32.',
+    },
+    {
+      q: 'Roughly how much memory do a 7B model\'s weights need for bf16 inference, and its weights + gradients + AdamW states for full mixed-precision training?',
+      opts: [
+        '7 GB to serve and 28 GB to train',
+        '28 GB to serve and 56 GB to train',
+        '14 GB to serve and 56 GB to train',
+        '14 GB to serve and 112 GB to train',
+      ],
+      a: 3,
+      why: 'Inference: 7B × 2 bytes = 14 GB of weights (plus KV cache). Training: 7B × 16 bytes = 112 GB, which exceeds a single 80 GB GPU.',
+      distract: '**7 GB** is INT8/FP8 weights. **28 GB** is fp32 weights. **56 GB** uses 8 bytes per parameter, missing part of the optimizer state.',
+    },
+    {
+      q: 'You halve the micro-batch size of a training run. What happens to memory?',
+      opts: [
+        'Activation memory roughly halves; weights, gradients and optimizer states are unchanged',
+        'Weights, gradients, optimizer states and activations all roughly halve',
+        'Only optimizer-state memory halves because fewer gradients are stored',
+        'Nothing changes, because PyTorch allocates training memory per parameter only',
+      ],
+      a: 0,
+      why: '[[activation-memory|Activation memory]] scales with micro-batch × sequence × hidden × layers. Weights, gradients and [[optimizer-states|optimizer states]] depend only on the number of parameters.',
+      distract: 'Parameter-proportional memory does not depend on batch size, so it does not halve, and optimizer states are per parameter, not per sample. Activations are definitely allocated per sample.',
+    },
+    {
+      q: 'Why does FlashAttention reduce activation memory so much at long context?',
+      opts: [
+        'It quantizes the stored keys and values to FP8, halving their memory footprint',
+        'It shares a single key/value head across all query heads in each layer',
+        'It never stores the s × s attention matrix, so attention memory becomes linear in sequence length',
+        'It moves saved activations to CPU memory between the forward and backward passes',
+      ],
+      a: 2,
+      why: 'The 5·a·s²·b term in the activation estimate is the stored attention scores/probabilities. [[flash-attention|FlashAttention]] computes attention in tiles and recomputes them in backward, removing that quadratic term.',
+      distract: 'FP8 KV storage is an inference technique. Sharing K/V heads is MQA/GQA, an architecture change. Moving activations to CPU is offloading, not FlashAttention.',
+    },
+    {
+      q: 'Which statement about serving memory is correct?',
+      opts: [
+        'Serving needs the same 16 bytes per parameter as training because the optimizer must be loaded',
+        'Serving needs weights plus a KV cache that grows with batch size and context length',
+        'Serving needs only the weights; context length does not affect memory',
+        'Serving needs weights plus gradients, but no optimizer states',
+      ],
+      a: 1,
+      why: 'Inference keeps only the weights (2 bytes/param in bf16) and the [[kv-cache|KV cache]]: 2 × layers × kv_heads × head_dim × seq_len × batch × bytes, which often exceeds the weights at large batch and long context.',
+      distract: 'No optimizer or gradients exist at inference time. The KV cache grows linearly with context length, so context very much matters.',
+    },
+  ],
+
+  'mixed-precision': [
+    {
+      q: 'In a fp16 training loop with `torch.amp.GradScaler`, where must `scaler.unscale_(optimizer)` be called?',
+      opts: [
+        'After `backward()` and before gradient clipping, so the norm is computed on true-scale gradients',
+        'Before the forward pass, so the scale factor is reset at the start of every step',
+        'After `optimizer.step()`, so the updated weights are restored to their original scale',
+        'Only on steps where an inf or NaN gradient has been detected by the scaler',
+      ],
+      a: 0,
+      why: 'Gradients after `scaler.scale(loss).backward()` are multiplied by the scale factor. Unscale them first, then clip with `clip_grad_norm_`, then `scaler.step()` and `scaler.update()`.',
+      distract: 'The forward pass is not scaled. Weights are never scaled. `scaler.step()` handles inf/NaN by skipping the step; unscaling is needed every step you clip.',
+    },
+    {
+      q: 'You use gradient accumulation over 4 micro-batches but forget to divide each micro-batch loss by 4. What is the effect?',
+      opts: [
+        'None — the optimizer normalises gradients automatically',
+        'Only the last micro-batch contributes to the update',
+        'Gradients are 4× too large — roughly like a 4× higher learning rate',
+        'The effective global batch grows to 16 micro-batches',
+      ],
+      a: 2,
+      why: 'Gradients are summed in `.grad` across micro-batches. Without dividing the loss, you get the sum rather than the mean — a 4× larger gradient, which acts like a 4× learning rate unless clipping intervenes.',
+      distract: 'Optimizers do not renormalise gradient magnitudes (Adam partially adapts, but not reliably). All micro-batches contribute. The batch size does not change.',
+    },
+    {
+      q: 'What does activation checkpointing trade?',
+      opts: [
+        'Accuracy for speed: it lowers numerical precision of activations',
+        'Disk space for memory: it writes saved activations to local NVMe drives',
+        'Communication for memory: it shards activations across the GPUs',
+        'Compute for memory: it recomputes activations in backward instead of storing them',
+      ],
+      a: 3,
+      why: '[[activation-checkpointing|Activation checkpointing]] keeps only block inputs and recomputes internals during the backward pass — about one extra forward pass (~30% more compute) for a large memory saving.',
+      distract: 'It is exact, so it does not lower precision. Writing to NVMe is offloading. Sharding activations across GPUs is sequence/context parallelism.',
+    },
+    {
+      q: 'In Transformer Engine\'s "hybrid" FP8 recipe, which formats are used where?',
+      opts: [
+        'E5M2 for forward activations and weights, E4M3 for gradients',
+        'E4M3 for forward activations and weights, E5M2 for gradients',
+        'E4M3 for everything, with bf16 gradients',
+        'FP8 for the optimizer states only; matmuls stay in bf16',
+      ],
+      a: 1,
+      why: 'Forward tensors need precision (E4M3: 3 mantissa bits); gradients need range (E5M2: 5 exponent bits). [[transformer-engine|Transformer Engine]] manages per-tensor scale factors.',
+      distract: 'The first option swaps them. E4M3 for everything is a different recipe, not "hybrid". FP8 in TE is about the GEMMs, not optimizer state storage.',
+    },
+    {
+      q: 'Which is the main source of speed-up from `torch.compile` on a transformer?',
+      opts: [
+        'Fusing memory-bound elementwise ops (norms, activations, residuals) into fewer kernels',
+        'Converting every matmul in the model to FP8 automatically at compile time',
+        'Sharding the model and its optimizer states across all visible GPUs',
+        'Replacing AdamW with a cheaper optimizer that keeps fewer states',
+      ],
+      a: 0,
+      why: '[[torch-compile|torch.compile]] captures the graph and generates fused kernels for the memory-bound ops around matmuls, reducing HBM reads/writes and kernel launches.',
+      distract: 'Compilation does not change precision, add parallelism, or change the optimizer.',
+    },
+  ],
+
+  'pretrain-small-llm': [
+    {
+      q: 'Your freshly initialised model with a 49,152-token vocabulary reports a first-step loss of about 10.8. What does that tell you?',
+      opts: [
+        'The learning rate is far too high',
+        'The labels are shifted twice and the model is predicting two tokens ahead',
+        'The model has already memorised the data',
+        'This is expected: a near-uniform prediction gives loss ≈ ln(49,152) ≈ 10.8',
+      ],
+      a: 3,
+      why: 'Untrained models output roughly uniform probabilities, and [[cross-entropy|cross-entropy]] of a uniform guess over V tokens is ln(V). This sanity check catches init and label bugs.',
+      distract: 'Learning rate and memorisation show up only after training starts. A label shift bug would show as a loss that will not decrease, not as the expected initial value.',
+    },
+    {
+      q: 'Why does the lab pack tokenized stories into fixed 512-token blocks instead of padding each story?',
+      opts: [
+        'Packing is required by the Llama architecture and its RoPE embeddings',
+        'Packing avoids wasting compute on pad tokens and gives every batch the same shape',
+        'Packing prevents the model from attending across document boundaries',
+        'Packing reduces the vocabulary size and therefore the embedding table',
+      ],
+      a: 1,
+      why: 'Padding short stories to 512 tokens would waste much of every batch. Packing concatenates documents separated by EOS and slices full blocks, so every position contributes to the loss and shapes stay static.',
+      distract: 'Llama works with padded inputs too. Plain packing actually *allows* cross-document attention inside a block. Vocabulary is fixed by the tokenizer.',
+    },
+    {
+      q: 'What does the warmup + cosine learning-rate schedule do?',
+      opts: [
+        'Starts at the peak LR and drops it suddenly at fixed epochs',
+        'Keeps the LR constant and lowers it only when validation loss rises',
+        'Ramps the LR up linearly at first, then decays it smoothly along a cosine curve',
+        'Oscillates the LR between a minimum and maximum every few hundred steps',
+      ],
+      a: 2,
+      why: 'Linear warmup avoids huge early updates while Adam\'s statistics are noisy; cosine decay then lowers the [[learning-rate|learning rate]] smoothly to a small value by the final step.',
+      distract: 'Sudden drops describe step decay. Lowering on a plateau is ReduceLROnPlateau. Repeated oscillation is a cyclic schedule.',
+    },
+    {
+      q: 'Using C ≈ 6·N·D, how many FLOPs does it take to train a 100M-parameter model on 2B tokens?',
+      opts: [
+        '1.2 × 10¹⁸ FLOPs',
+        '1.2 × 10¹⁷ FLOPs',
+        '2 × 10¹⁷ FLOPs',
+        '6 × 10²⁰ FLOPs',
+      ],
+      a: 0,
+      why: '6 × 1e8 × 2e9 = 1.2e18 FLOPs. At an effective 400 TFLOP/s that is about 50 minutes on one H100.',
+      distract: '**1.2e17** drops a factor of 10. **2e17** is N × D without the 6. **6e20** is far too large — it multiplies by an extra 500.',
+    },
+    {
+      q: 'Why does the lab build its own labels and use `default_data_collator` instead of `DataCollatorForLanguageModeling` with `pad_token = eos_token`?',
+      opts: [
+        'DataCollatorForLanguageModeling does not support causal language models',
+        'default_data_collator shifts the labels by one position, which the model needs',
+        'default_data_collator casts the batch to bf16 so mixed precision works correctly',
+        'With pad = EOS, the LM collator masks every EOS label to −100, so ending is never learned',
+      ],
+      a: 3,
+      why: 'The LM collator sets labels to −100 wherever `input_ids == pad_token_id`. If pad and EOS share an id, every real EOS is excluded from the loss. Packed blocks have no padding, so building labels directly is simpler and correct.',
+      distract: 'The LM collator does support causal LM (`mlm=False`). Neither collator shifts labels — the model does that internally. Collators do not apply mixed precision.',
+    },
+  ],
+
+  distributed: [
+    {
+      q: 'Which statement about DDP is correct?',
+      opts: [
+        'It shards the optimizer states so that each GPU stores only 1/N of them',
+        'It splits each layer\'s weight matrices column- and row-wise across GPUs',
+        'Each GPU holds a full replica, and gradients are all-reduced during the backward pass',
+        'It sends activations point-to-point between GPUs holding different layers',
+      ],
+      a: 2,
+      why: '[[ddp|DDP]] replicates the model and optimizer on every rank and averages gradients with a bucketed [[all-reduce|all-reduce]] overlapped with backward.',
+      distract: 'Sharding optimizer states is ZeRO-1. Splitting matrices is tensor parallelism. Point-to-point activation transfer is pipeline parallelism.',
+    },
+    {
+      q: 'With ZeRO-3 / FSDP full sharding over N GPUs, approximately how much state memory does each GPU need for a Ψ-parameter model in mixed-precision AdamW?',
+      opts: [
+        '16Ψ / N',
+        '16Ψ',
+        '4Ψ + 12Ψ / N',
+        '2Ψ + 14Ψ / N',
+      ],
+      a: 0,
+      why: 'ZeRO-3 shards weights, gradients and optimizer states, so all 16 bytes per parameter are divided by N.',
+      distract: '**16Ψ** is DDP. **4Ψ + 12Ψ/N** is ZeRO-1 (optimizer states only). **2Ψ + 14Ψ/N** is ZeRO-2 (plus gradients).',
+    },
+    {
+      q: 'A pipeline has 4 stages and processes 12 micro-batches per step. What is the approximate bubble fraction?',
+      opts: [
+        '4 / 12 ≈ 33%',
+        '3 / 15 = 20%',
+        '1 / 4 = 25%',
+        '3 / 12 = 25%',
+      ],
+      a: 1,
+      why: 'Bubble = (p − 1)/(m + p − 1) = 3 / (12 + 3) = 20%. More micro-batches or interleaved stages make it smaller.',
+      distract: 'The other options use the wrong formula — the bubble depends on both p − 1 and m + p − 1.',
+    },
+    {
+      q: 'What does Megatron-style sequence parallelism add to tensor parallelism?',
+      opts: [
+        'It splits the full sequence across nodes for every layer, including attention',
+        'It routes each token to a different expert GPU using an all-to-all',
+        'It replicates the sequence on every GPU to avoid communication',
+        'It shards norm/dropout activations along the sequence within the TP group',
+      ],
+      a: 3,
+      why: '[[sequence-parallelism|Sequence parallelism]] removes the redundant activation copies TP leaves in non-matmul regions, at essentially no extra communication.',
+      distract: 'Splitting the whole sequence for all layers is context parallelism. Routing to experts is expert parallelism. Replication is the opposite of what SP does.',
+    },
+    {
+      q: 'With 64 GPUs, tensor parallelism 4 and pipeline parallelism 2, what is the data-parallel size?',
+      opts: [
+        '16',
+        '32',
+        '8',
+        '4',
+      ],
+      a: 2,
+      why: 'World size = TP × PP × DP, so DP = 64 / (4 × 2) = 8.',
+      distract: '**16** divides by TP only, **32** by PP only, **4** divides twice by TP.',
+    },
+  ],
+
+  profiling: [
+    {
+      q: 'A 1B model trains on 8 A100s (dense BF16 peak ≈ 312 TFLOP/s) at 160,000 tokens/s in total. What is the MFU?',
+      opts: [
+        'About 77%',
+        'About 38%',
+        'About 19%',
+        'About 6%',
+      ],
+      a: 1,
+      why: 'Per GPU: 20,000 tokens/s. [[mfu|MFU]] = 6 × 1e9 × 2e4 / 312e12 = 1.2e14 / 3.12e14 ≈ 38%.',
+      distract: '**77%** uses 12·N per token. **19%** uses 3·N. **6%** forgets the 6.',
+    },
+    {
+      q: 'Which observation is the best indicator that Tensor Cores are actually busy, rather than just "a kernel is running"?',
+      opts: [
+        'nvidia-smi reporting utilization.gpu at a steady 100%',
+        'High framebuffer memory usage reported by nvidia-smi',
+        'GPU temperature and power draw both near their limits',
+        'DCGM tensor-pipe-active and SM-active metrics (or a high MFU)',
+      ],
+      a: 3,
+      why: 'utilization.gpu only measures the fraction of time any kernel ran. [[dcgm|DCGM]] profiling counters (SM active, tensor pipe active) and MFU show how much of the hardware is really used.',
+      distract: 'utilization.gpu can be 100% with one tiny kernel. Memory usage and temperature do not measure compute efficiency.',
+    },
+    {
+      q: 'Training OOMs during the forward pass at a larger sequence length. The global batch must stay the same. What is the cheapest first fix?',
+      opts: [
+        'Reduce the micro-batch and increase gradient accumulation',
+        'Move from DDP to tensor parallelism across nodes',
+        'Switch the model to fp32 for numerical safety',
+        'Offload the optimizer states to NVMe',
+      ],
+      a: 0,
+      why: 'Activation memory grew with the sequence length. A smaller micro-batch with more [[gradient-accumulation|accumulation]] reduces activations while keeping the global batch; checkpointing is the next rung.',
+      distract: 'Cross-node TP is slow and a large change. fp32 doubles memory. Offloading optimizer states attacks the wrong memory category.',
+    },
+    {
+      q: 'The loss spikes to NaN at exactly the same step every time you restart from a checkpoint. What should you suspect first?',
+      opts: [
+        'A faulty GPU producing corrupted results in some kernel',
+        'Unlucky random weight initialisation of the model layers',
+        'A bad data batch at that step (or the LR schedule at that point)',
+        'A bug in the installed NCCL version used for all-reduce',
+      ],
+      a: 2,
+      why: 'A deterministic, reproducible spike points to something that is the same every time — the data at that step or the schedule. Inspect and skip the batch, or adjust the LR.',
+      distract: 'Hardware faults are usually not tied to one step. Initialisation is not involved when resuming from a checkpoint. NCCL bugs cause hangs or errors, not deterministic NaN losses.',
+    },
+    {
+      q: 'Which environment variable is the standard first step when a multi-node job hangs inside a collective?',
+      opts: [
+        'CUDA_VISIBLE_DEVICES=0',
+        'NCCL_DEBUG=INFO',
+        'PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True',
+        'OMP_NUM_THREADS=1',
+      ],
+      a: 1,
+      why: '`NCCL_DEBUG=INFO` makes [[nccl|NCCL]] log topology, transports (NVLink, IB, sockets) and errors per rank, revealing misconfigured interfaces or a stalled rank.',
+      distract: 'Restricting to one GPU hides the problem. The allocator setting addresses fragmentation OOMs. OMP threads affect CPU ops, not collectives.',
+    },
+  ],
+}

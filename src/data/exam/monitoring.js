@@ -1,0 +1,65 @@
+// Exam-bank questions for Production Monitoring and Reliability (official domain 9, 7%). Not reused in quizzes or checks.
+export default [
+  { id: 'xm01', domain: 'monitoring',
+    scenario: 'An LLM endpoint shows rising time per output token during business hours, while time to first token and queue depth stay low. The KV-cache usage gauge sits near 100% at those times.',
+    q: 'What is the most likely explanation?',
+    opts: [
+      'The retriever in front of the model has become slow under load',
+      'Many concurrent long-context requests are saturating the KV cache during decode',
+      'A prompt template change has added a much longer system prompt',
+      'One GPU has hit an Xid error and dropped out of the serving pool',
+    ],
+    a: 1,
+    why: 'Decode-phase slowness with a saturated KV cache points to memory pressure from many long-running sequences: larger decode batches per step and possibly preemption/recomputation. Remedies include more replicas, an FP8 KV cache, or limiting max context and concurrency.',
+    distract: 'A slow **retriever** and a longer **system prompt** would raise TTFT, not TPOT. A **failed GPU** would show errors or reduced capacity and rising queues.' },
+
+  { id: 'xm02', domain: 'monitoring',
+    q: 'A RAG chatbot\'s p95 latency doubled after a release. The team needs to see, per request, how long the guardrail check, vector search, re-ranking and generation each took. What should they use?',
+    opts: [
+      'DCGM profiling metrics collected on the inference GPUs',
+      'A Prometheus counter of total requests per service',
+      'Distributed tracing with OpenTelemetry spans for each stage',
+      'An A/B test between the old release and the new release',
+    ],
+    a: 2,
+    why: '[[observability-tracing|Distributed tracing]] records a timed span for each stage of each request, so the slow component is visible immediately and can be compared between good and bad requests.',
+    distract: '**DCGM** sees GPUs, not the retriever or guardrail services. A **request counter** has no per-stage timing. An **A/B test** measures user outcomes, not where latency comes from.' },
+
+  { id: 'xm03', domain: 'monitoring',
+    scenario: 'A team retrains its support model monthly. They want the pipeline to run automatically but never to ship a model that is worse than production on any key metric or customer segment.',
+    q: 'Which design satisfies this?',
+    opts: [
+      'Retrain automatically, register a challenger, gate on the same per-slice regression suite as production, then canary',
+      'Automated retraining that deploys directly to 100% of traffic when training loss is lower than last month',
+      'Manual retraining whenever a customer complains, deployed with blue-green and no evaluation',
+      'Automated retraining whose output replaces production if its MMLU score is higher than the base model\'s',
+    ],
+    a: 0,
+    why: 'Evidence-gated automation: version the candidate in the [[model-registry|registry]], compare it against production on identical evaluations including slices and safety, then roll out gradually with a [[canary-deployment|canary]] and automatic abort.',
+    distract: 'Training loss is not a production quality metric and 100% rollout removes the safety net. Ad-hoc retraining without evaluation is unsafe. A generic benchmark against the base model says nothing about regressions versus production.' },
+
+  { id: 'xm04', domain: 'monitoring',
+    q: 'Which pair correctly matches the rollout strategy to its purpose?',
+    opts: [
+      'Shadow → measure which version users prefer; A/B test → zero-risk validation on mirrored traffic',
+      'Canary → switch all traffic at once with instant rollback; blue-green → gradual percentage rollout',
+      'Blue-green → measure business KPIs with statistical significance; canary → mirror traffic without serving it',
+      'A/B test → compare user outcomes across random groups; canary → small, growing traffic share with abort',
+    ],
+    a: 3,
+    why: '[[ab-testing|A/B tests]] answer "which is better for users?" with randomised groups and significance testing; canaries limit blast radius during rollout with automated abort.',
+    distract: 'The other options swap the definitions: shadow mirrors without serving, blue-green switches everything at once, and canary is the gradual one.' },
+
+  { id: 'xm05', domain: 'monitoring',
+    scenario: 'Two weeks after launch, the judge-scored pass rate of sampled responses falls from 92% to 84%. Latency, error rate and GPU metrics are unchanged, and no model or prompt was deployed in that period. Embedding drift on incoming prompts is high.',
+    q: 'What is the best next step?',
+    opts: [
+      'Roll back to the previous model version immediately as a precaution',
+      'Inspect failures on the drifted prompt clusters, then choose a RAG update or targeted fine-tune',
+      'Increase the number of serving replicas to reduce load on each GPU',
+      'Replace the judge model, since a pass-rate drop without a deploy must be a judge error',
+    ],
+    a: 1,
+    why: 'Nothing changed on the serving side, and [[embedding-drift|embedding drift]] says the inputs did. Root-cause analysis starts with the drifted slices: if failures are about new facts, update RAG; if they are new task types, collect data and fine-tune.',
+    distract: 'There is no new version to roll back from. Load is not the problem — latency is unchanged. Discarding the judge ignores corroborating drift; only replace it if its own version changed or it disagrees with human labels.' },
+]

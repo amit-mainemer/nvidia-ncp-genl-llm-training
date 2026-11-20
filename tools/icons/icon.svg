@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16261a"/>
+      <stop offset="1" stop-color="#060a11"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".28" cy=".22" r=".75">
+      <stop offset="0" stop-color="#8fdc4a" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#8fdc4a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx=".9" cy=".95" r=".6">
+      <stop offset="0" stop-color="#ff9f5a" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#ff9f5a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b4f07a"/>
+      <stop offset=".6" stop-color="#8fdc4a"/>
+      <stop offset="1" stop-color="#ff9f5a"/>
+    </linearGradient>
+    
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <rect width="512" height="512" fill="url(#glow)"/>
+  <rect width="512" height="512" fill="url(#glow2)"/>
+  <path d="M140 166L256 136M140 166L256 216M140 166L256 296M140 166L256 376M140 256L256 136M140 256L256 216M140 256L256 296M140 256L256 376M140 346L256 136M140 346L256 216M140 346L256 296M140 346L256 376M256 136L372 196M256 136L372 316M256 216L372 196M256 216L372 316M256 296L372 196M256 296L372 316M256 376L372 196M256 376L372 316" stroke="url(#edge)" stroke-width="7" stroke-opacity=".55" fill="none"/>
+  <circle cx="140" cy="166" r="30" fill="#0b1410" stroke="#8fdc4a" stroke-width="14"/>
+  <circle cx="140" cy="256" r="30" fill="#0b1410" stroke="#8fdc4a" stroke-width="14"/>
+  <circle cx="140" cy="346" r="30" fill="#0b1410" stroke="#8fdc4a" stroke-width="14"/>
+  <circle cx="256" cy="136" r="26" fill="#0b1410" stroke="#8fdc4a" stroke-width="14"/>
+  <circle cx="256" cy="216" r="26" fill="#0b1410" stroke="#8fdc4a" stroke-width="14"/>
+  <circle cx="256" cy="296" r="26" fill="#0b1410" stroke="#8fdc4a" stroke-width="14"/>
+  <circle cx="256" cy="376" r="26" fill="#0b1410" stroke="#8fdc4a" stroke-width="14"/>
+  <circle cx="372" cy="196" r="30" fill="#0b1410" stroke="#ff9f5a" stroke-width="14"/>
+  <circle cx="372" cy="316" r="30" fill="#0b1410" stroke="#ff9f5a" stroke-width="14"/>
+</svg>
