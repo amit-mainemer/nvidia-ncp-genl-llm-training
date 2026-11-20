@@ -1,0 +1,133 @@
+WEBVTT
+
+1
+00:00:00.300 --> 00:00:04.559
+Welcome to Module Three: GPU Acceleration and Optimization.
+
+2
+00:00:04.889 --> 00:00:08.551
+Here you learn how language models are really trained on GPUs.
+
+3
+00:00:09.351 --> 00:00:12.672
+Picture a startup that has just rented eight H100s.
+
+4
+00:00:13.002 --> 00:00:17.283
+The plan: fully fine-tune a thirteen billion parameter model by Friday.
+
+5
+00:00:18.083 --> 00:00:21.467
+The first launch dies in seconds with an out-of-memory error.
+
+6
+00:00:21.797 --> 00:00:25.481
+Someone halves the batch size, and it crashes exactly the same way.
+
+7
+00:00:26.281 --> 00:00:30.177
+In bf16, the weights alone are only twenty-six gigabytes.
+
+8
+00:00:30.507 --> 00:00:35.556
+But AdamW also keeps gradients, a master copy, and two optimizer moments.
+
+9
+00:00:36.356 --> 00:00:40.082
+That's sixteen bytes per parameter, about two hundred and eight gigabytes.
+
+10
+00:00:40.412 --> 00:00:44.757
+No single eighty gigabyte GPU holds that, whatever the batch size.
+
+11
+00:00:45.557 --> 00:00:50.307
+Lesson one teaches this memory math, from optimizer states to the KV cache.
+
+12
+00:00:50.637 --> 00:00:54.235
+You'll write an estimator that answers "will it fit?" before you launch.
+
+13
+00:00:55.035 --> 00:00:56.943
+Lesson two adds mixed precision,
+
+14
+00:00:56.993 --> 00:01:00.126
+gradient accumulation, and activation checkpointing.
+
+15
+00:01:00.456 --> 00:01:04.246
+FlashAttention and torch.compile then make every step faster.
+
+16
+00:01:05.046 --> 00:01:09.561
+In lesson three's lab, you'll pretrain a small Llama from scratch on TinyStories.
+
+17
+00:01:09.891 --> 00:01:13.617
+You'll watch the loss fall, then generate stories from your own checkpoint.
+
+18
+00:01:14.417 --> 00:01:16.842
+Back at the startup, the real fix is sharding.
+
+19
+00:01:17.172 --> 00:01:22.519
+With FSDP or ZeRO, each GPU keeps only its own slice of the training state.
+
+20
+00:01:23.319 --> 00:01:28.347
+Lesson four starts with simple data parallelism, using DDP and torchrun.
+
+21
+00:01:28.677 --> 00:01:33.640
+Then come tensor and pipeline parallelism, for models too big for one GPU.
+
+22
+00:01:34.440 --> 00:01:39.574
+Placement matters: tensor parallelism stays inside a node, on fast NVLink.
+
+23
+00:01:39.904 --> 00:01:45.507
+Pipeline stages and data-parallel replicas can stretch across nodes over InfiniBand.
+
+24
+00:01:46.307 --> 00:01:51.548
+The job finally runs, and the dashboard shows 100% GPU utilization.
+
+25
+00:01:51.878 --> 00:01:55.561
+Yet progress is slow, because the Tensor Cores are mostly waiting.
+
+26
+00:01:56.361 --> 00:02:01.410
+Lesson five measures real efficiency with model FLOPs utilization, or MFU.
+
+27
+00:02:01.740 --> 00:02:05.231
+You'll profile steps with PyTorch and Nsight to find the stalls.
+
+28
+00:02:06.031 --> 00:02:09.480
+You'll learn an ordered ladder of fixes for out-of-memory errors.
+
+29
+00:02:09.810 --> 00:02:13.045
+And you'll debug NaN losses, loss spikes, and NCCL hangs.
+
+30
+00:02:13.845 --> 00:02:16.142
+This domain is fourteen percent of the exam.
+
+31
+00:02:16.472 --> 00:02:21.521
+Expect memory math, ZeRO stages, parallel layouts, and profiling scenarios.
+
+32
+00:02:22.321 --> 00:02:26.537
+By the end, you'll size, launch, scale, and debug a real training run.
+
+33
+00:02:26.867 --> 00:02:29.911
+Let's start with lesson one: GPU memory math.

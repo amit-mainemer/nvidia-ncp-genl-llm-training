@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Module 4 intro slides</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, Consolas, monospace; }
+</style>
+</head>
+<body>
+
+<!-- local shapes: a snowflake (frozen weights) and a small GPU board -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="snow" viewBox="0 0 100 100">
+    <g stroke="var(--body, #bfe6ff)" stroke-width="9" stroke-linecap="round" fill="none">
+      <path d="M50 8 V92 M14 29 L86 71 M14 71 L86 29"/>
+      <path d="M38 14 L50 24 L62 14 M38 86 L50 76 L62 86 M14 45 L24 36 M86 55 L76 64 M14 55 L24 64 M86 45 L76 36"/>
+    </g>
+  </symbol>
+  <symbol id="board" viewBox="0 0 200 280">
+    <rect x="0" y="0" width="200" height="262" rx="22" fill="var(--body, #2c3350)"/>
+    <rect x="22" y="16" width="156" height="14" rx="7" fill="var(--stripe, #76b900)"/>
+    <rect x="22" y="72" width="22" height="44" rx="5" fill="#9aa3c7"/><rect x="22" y="126" width="22" height="44" rx="5" fill="#9aa3c7"/>
+    <rect x="156" y="72" width="22" height="44" rx="5" fill="#9aa3c7"/><rect x="156" y="126" width="22" height="44" rx="5" fill="#9aa3c7"/>
+    <rect x="54" y="66" width="92" height="110" rx="14" fill="var(--chip, #4a5275)"/>
+    <rect x="70" y="84" width="60" height="74" rx="8" fill="var(--die, #76b900)"/>
+    <rect x="30" y="262" width="140" height="18" rx="3" fill="#ffcf4a"/>
+  </symbol>
+</svg>
+
+<!-- 1 · welcome -->
+<section class="slide t-plum" style="--accent:#7b2ff7">
+  <div class="cap"><span class="eyebrow">Module 4 · Fine-Tuning</span><h1>Teach a model <em>new habits</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="sprites.svg#robot" x="90" y="380" width="300" height="394" style="--body:#ffcf4a;--accent:#7b2ff7"/>
+    <use href="sprites.svg#sparkle" x="300" y="330" width="80" height="80"/>
+    <g fill="#fff">
+      <rect x="430" y="380" width="262" height="360" rx="30"/><rect x="712" y="380" width="262" height="360" rx="30"/>
+      <rect x="994" y="380" width="262" height="360" rx="30"/><rect x="1276" y="380" width="262" height="360" rx="30"/>
+      <rect x="1558" y="380" width="262" height="360" rx="30"/>
+    </g>
+    <use href="sprites.svg#question" x="501" y="420" width="120" height="120" style="--body:#7c5cff"/>
+    <use href="sprites.svg#book" x="768" y="430" width="150" height="115"/>
+    <use href="sprites.svg#puzzle" x="1065" y="415" width="120" height="120" style="--body:#22b8a6"/>
+    <use href="sprites.svg#thumbs-up" x="1347" y="415" width="120" height="120" style="--body:#ff7a59"/>
+    <use href="sprites.svg#gear" x="1629" y="415" width="120" height="120" style="--body:#76b900"/>
+    <g font-size="38" font-weight="900" fill="#1d2340" text-anchor="middle">
+      <text x="561" y="620">When?</text><text x="843" y="620">SFT</text><text x="1125" y="620">LoRA</text><text x="1407" y="620">DPO</text><text x="1689" y="620">NeMo</text>
+    </g>
+    <g font-size="25" font-weight="700" fill="#4a5275" text-anchor="middle">
+      <text x="561" y="670">pick the lever</text><text x="843" y="670">full fine-tune</text><text x="1125" y="670">and QLoRA</text><text x="1407" y="670">and GRPO</text><text x="1689" y="670">at scale</text>
+    </g>
+  </svg>
+  <div class="lbl amber lg" style="left:960px; top:880px">Fine-tune, align and ship · on one GPU</div>
+</section>
+
+<!-- 2 · the assistant goes off script -->
+<section class="slide t-sand" style="--accent:#b5561d">
+  <div class="cap"><span class="eyebrow">A real-world case</span><h1>An assistant <em>off script</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="sprites.svg#building" x="100" y="420" width="230" height="279"/>
+    <use href="sprites.svg#shield" x="170" y="320" width="90" height="104" style="--body:#22b8a6"/>
+    <use href="sprites.svg#robot-sad" x="390" y="440" width="230" height="302" style="--body:#9aa3c7"/>
+    <g fill="#fff">
+      <rect x="690" y="320" width="1120" height="150" rx="30"/><rect x="690" y="500" width="1120" height="150" rx="30"/><rect x="690" y="680" width="1120" height="150" rx="30"/>
+    </g>
+    <g font-size="34" font-weight="700" fill="#1d2340" font-style="italic">
+      <text x="730" y="385">"Well, so, to be honest, there are many kinds</text>
+      <text x="730" y="430">of policies, and it really depends on…"</text>
+      <text x="730" y="590">"yo!! ur claim's prob fine lol"</text>
+    </g>
+    <text x="730" y="770" class="mono" font-size="34" font-weight="700" fill="#e2533a">{"ticket": "claim", "prio…</text>
+    <use href="sprites.svg#cross" x="1700" y="715" width="80" height="80"/>
+  </svg>
+  <div class="lbl coral" style="left:1660px; top:320px">Rambles</div>
+  <div class="lbl violet" style="left:1660px; top:500px">Wrong tone</div>
+  <div class="lbl red" style="left:1500px; top:680px">Broken ticket format</div>
+  <div class="lbl dark" style="left:420px; top:830px">Insurance support bot</div>
+</section>
+
+<!-- 3 · facts change weekly -->
+<section class="slide t-coral" style="--accent:#e2533a">
+  <div class="cap"><span class="eyebrow">The first instinct</span><h1>But facts <em>change weekly</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="sprites.svg#doc" x="110" y="420" width="130" height="160" style="--accent:#7c5cff"/>
+    <use href="sprites.svg#doc" x="170" y="380" width="130" height="160" style="--accent:#22b8a6"/>
+    <use href="sprites.svg#doc" x="230" y="440" width="130" height="160" style="--accent:#ffb020"/>
+    <use href="sprites.svg#folder" x="140" y="610" width="220" height="168"/>
+    <use href="sprites.svg#arrow" x="400" y="520" width="150" height="45" style="--body:#fff"/>
+    <use href="sprites.svg#robot" x="580" y="380" width="230" height="302" style="--body:#ffcf4a;--accent:#7c5cff"/>
+    <use href="#snow" x="760" y="360" width="80" height="80" style="--body:#fff"/>
+    <rect x="980" y="330" width="830" height="520" rx="34" fill="#fff"/>
+    <path d="M980 364 Q980 330 1014 330 H1776 Q1810 330 1810 364 V420 H980 Z" fill="#1d2340"/>
+    <text x="1395" y="390" text-anchor="middle" font-size="36" font-weight="900" fill="#fff" letter-spacing="3">POLICY UPDATES</text>
+    <g font-size="30" font-weight="800" fill="#4a5275">
+      <text x="1030" y="490">Mon</text><text x="1030" y="590">Mon</text><text x="1030" y="690">Mon</text><text x="1030" y="790">Mon</text>
+    </g>
+    <g>
+      <rect x="1130" y="455" width="520" height="50" rx="14" fill="#ffd9de"/><rect x="1130" y="555" width="520" height="50" rx="14" fill="#ffd9de"/>
+      <rect x="1130" y="655" width="520" height="50" rx="14" fill="#ffd9de"/><rect x="1130" y="755" width="520" height="50" rx="14" fill="#ffd9de"/>
+    </g>
+    <g font-size="28" font-weight="800" fill="#e2533a"><text x="1155" y="490">Flood cover v2</text><text x="1155" y="590">New deductibles</text><text x="1155" y="690">Pet policy added</text><text x="1155" y="790">Claims limit v3</text></g>
+    <g font-size="24" font-weight="900" fill="#fff"><rect x="1670" y="460" width="100" height="40" rx="20" fill="#ff5d73"/><text x="1720" y="489" text-anchor="middle">NEW</text>
+      <rect x="1670" y="560" width="100" height="40" rx="20" fill="#ff5d73"/><text x="1720" y="589" text-anchor="middle">NEW</text>
+      <rect x="1670" y="660" width="100" height="40" rx="20" fill="#ff5d73"/><text x="1720" y="689" text-anchor="middle">NEW</text>
+      <rect x="1670" y="760" width="100" height="40" rx="20" fill="#ff5d73"/><text x="1720" y="789" text-anchor="middle">NEW</text></g>
+  </svg>
+  <div class="lbl dark" style="left:450px; top:850px">Fine-tune on every document?</div>
+  <div class="lbl red lg" style="left:1395px; top:925px">Stale by Monday</div>
+</section>
+
+<!-- 4 · lesson 1: pick the right lever -->
+<section class="slide t-lilac" style="--accent:#6a45e8">
+  <div class="cap"><span class="eyebrow">Lesson 1 · Choosing a method</span><h1>Pick the <em>right lever</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <g>
+      <rect x="130" y="760" width="160" height="100" rx="16" fill="#5cc8ff"/>
+      <rect x="310" y="690" width="160" height="170" rx="16" fill="#22b8a6"/>
+      <rect x="490" y="610" width="160" height="250" rx="16" fill="#7c5cff"/>
+      <rect x="670" y="510" width="160" height="350" rx="16" fill="#ff7a59"/>
+      <rect x="850" y="400" width="160" height="460" rx="16" fill="#ff6f9c"/>
+    </g>
+    <g font-size="28" font-weight="900" fill="#1d2340" text-anchor="middle">
+      <text x="210" y="740">Prompting</text><text x="390" y="670">RAG</text><text x="570" y="590">PEFT</text><text x="750" y="490">Full FT</text>
+      <text x="930" y="345">Continued</text><text x="930" y="380">pretraining</text>
+    </g>
+    <g fill="none" stroke="#1d2340" stroke-width="6" stroke-linecap="round"><path d="M100 880 H1030"/><path d="M100 880 V330"/><path d="M86 350 L100 330 L114 350"/></g>
+    <text x="80" y="620" font-size="26" font-weight="800" fill="#4a5275" transform="rotate(-90 80 620)" text-anchor="middle">cost ↑</text>
+    <g fill="#fff"><rect x="1100" y="360" width="710" height="220" rx="30"/><rect x="1100" y="620" width="710" height="220" rx="30"/></g>
+    <use href="sprites.svg#database" x="1135" y="395" width="120" height="136" style="--body:#22b8a6"/>
+    <use href="sprites.svg#chat" x="1130" y="660" width="140" height="110" style="--body:#ff7a59"/>
+    <g font-size="34" font-weight="800" fill="#4a5275"><text x="1290" y="440">Missing knowledge</text><text x="1290" y="700">Behaviour, format, style</text></g>
+    <g font-size="48" font-weight="900"><text x="1290" y="520" fill="#128c7e">→ RAG</text><text x="1290" y="780" fill="#e2533a">→ fine-tune</text></g>
+  </svg>
+</section>
+
+<!-- 5 · lesson 2: SFT with TRL -->
+<section class="slide t-mint" style="--accent:#128c7e">
+  <div class="cap"><span class="eyebrow">Lesson 2 · Lab</span><h1>RAG for facts, <em>SFT for behaviour</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="sprites.svg#database" x="120" y="400" width="190" height="215" style="--body:#22b8a6"/>
+    <rect x="400" y="330" width="600" height="520" rx="32" fill="#fff"/>
+    <text x="440" y="395" font-size="34" font-weight="900" fill="#1d2340">Instruction dataset</text>
+    <g>
+      <rect x="440" y="430" width="230" height="50" rx="14" fill="#d9e1ef"/><rect x="680" y="430" width="280" height="50" rx="14" fill="#22b8a6"/>
+      <rect x="440" y="510" width="200" height="50" rx="14" fill="#d9e1ef"/><rect x="650" y="510" width="310" height="50" rx="14" fill="#7c5cff"/>
+      <rect x="440" y="590" width="260" height="50" rx="14" fill="#d9e1ef"/><rect x="710" y="590" width="250" height="50" rx="14" fill="#ff7a59"/>
+      <rect x="440" y="670" width="180" height="50" rx="14" fill="#d9e1ef"/><rect x="630" y="670" width="330" height="50" rx="14" fill="#ffb020"/>
+    </g>
+    <g font-size="26" font-weight="800"><text x="440" y="790" fill="#4a5275">prompt</text><text x="680" y="790" fill="#128c7e">completion</text></g>
+    <use href="sprites.svg#arrow" x="1015" y="565" width="110" height="33" style="--body:#1d2340"/>
+    <rect x="1140" y="480" width="300" height="190" rx="28" fill="#1d2340"/>
+    <text x="1290" y="565" text-anchor="middle" font-size="36" font-weight="900" fill="#fff">TRL</text>
+    <text x="1290" y="615" text-anchor="middle" class="mono" font-size="26" font-weight="700" fill="#8bd346">SFTTrainer</text>
+    <use href="sprites.svg#arrow" x="1450" y="565" width="90" height="27" style="--body:#1d2340"/>
+    <use href="sprites.svg#robot" x="1560" y="400" width="230" height="302" style="--body:#22b8a6;--accent:#ffcf4a"/>
+  </svg>
+  <div class="lbl teal" style="left:215px; top:680px">Facts → RAG</div>
+  <div class="lbl dark" style="left:1675px; top:770px">Qwen2.5-0.5B</div>
+</section>
+
+<!-- 6 · train on the replies -->
+<section class="slide t-sky" style="--accent:#1f6fbf">
+  <div class="cap"><span class="eyebrow">Lesson 2 · Getting SFT right</span><h1>Train on <em>the replies</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <rect x="110" y="320" width="760" height="110" rx="20" fill="#b8c2de"/>
+    <rect x="880" y="320" width="700" height="110" rx="20" fill="#1f6fbf"/>
+    <rect x="1590" y="320" width="220" height="110" rx="20" fill="#ffb020"/>
+    <g font-size="32" font-weight="900"><text x="150" y="388" fill="#1d2340">User prompt · masked, no loss</text><text x="920" y="388" fill="#fff">Assistant reply · trained</text><text x="1700" y="388" text-anchor="middle" class="mono" font-size="26" fill="#1d2340">&lt;|im_end|&gt;</text></g>
+    <rect x="110" y="480" width="800" height="380" rx="30" fill="#fff"/>
+    <g font-size="30" font-weight="900"><text x="150" y="545" fill="#e2533a">Before</text><text x="150" y="705" fill="#128c7e">After</text></g>
+    <g font-size="28" font-weight="700" fill="#4a5275" font-style="italic"><text x="150" y="595">"Well, so, policies are, um, many…"</text><text x="150" y="755">"Your claim is covered. Ticket #4821</text><text x="150" y="795">is open — expect a reply in 24 hours."</text></g>
+    <use href="sprites.svg#cross" x="790" y="520" width="70" height="70"/>
+    <use href="sprites.svg#check" x="790" y="680" width="70" height="70"/>
+    <rect x="960" y="480" width="850" height="380" rx="30" fill="#fff"/>
+    <path d="M1020 520 V810 H1770" fill="none" stroke="#b8c2de" stroke-width="4"/>
+    <path d="M1030 540 C 1100 700, 1200 740, 1400 770 S 1650 790, 1760 795" fill="none" stroke="#1f6fbf" stroke-width="9" stroke-linecap="round"/>
+    <path d="M1030 560 C 1100 700, 1220 735, 1400 745 S 1640 720, 1760 690" fill="none" stroke="#ff7a59" stroke-width="9" stroke-linecap="round" stroke-dasharray="20 12"/>
+    <g font-size="28" font-weight="900"><text x="1500" y="560" fill="#1f6fbf">train loss</text><text x="1500" y="605" fill="#ff7a59">eval loss</text></g>
+    <text x="1660" y="670" text-anchor="middle" font-size="26" font-weight="800" fill="#e2533a">overfitting?</text>
+  </svg>
+  <div class="lbl dark" style="left:960px; top:920px">Chat template + end-of-turn tokens</div>
+</section>
+
+<!-- 7 · full fine-tuning memory -->
+<section class="slide t-amber" style="--accent:#c25e00">
+  <div class="cap"><span class="eyebrow">The memory wall</span><h1>Full FT of 7B: <em>112 GB+</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <text x="160" y="400" font-size="34" font-weight="900" fill="#1d2340">Full fine-tune · 7B · 16 bytes per parameter</text>
+    <rect x="160" y="420" width="1300" height="110" rx="24" fill="#ff5d73"/>
+    <text x="200" y="492" font-size="52" font-weight="900" fill="#fff">112 GB + activations</text>
+    <use href="sprites.svg#fire" x="1480" y="390" width="110" height="150"/>
+    <text x="160" y="610" font-size="34" font-weight="900" fill="#1d2340">One H100</text>
+    <rect x="160" y="630" width="929" height="90" rx="22" fill="#22b8a6"/>
+    <text x="200" y="690" font-size="44" font-weight="900" fill="#fff">80 GB</text>
+    <text x="160" y="780" font-size="34" font-weight="900" fill="#1d2340">Free Colab T4</text>
+    <rect x="160" y="800" width="186" height="90" rx="22" fill="#5cc8ff"/>
+    <text x="190" y="860" font-size="44" font-weight="900" fill="#fff">16 GB</text>
+    <use href="sprites.svg#gpu" x="1120" y="630" width="140" height="91"/>
+    <use href="sprites.svg#gpu" x="380" y="800" width="140" height="91"/>
+  </svg>
+  <div class="lbl violet lg" style="left:1450px; top:845px">That's where LoRA comes in →</div>
+</section>
+
+<!-- 8 · LoRA -->
+<section class="slide t-teal" style="--accent:#0b7f75">
+  <div class="cap"><span class="eyebrow">Lesson 3 · LoRA</span><h1>Freeze the base, <em>train a sliver</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <rect x="140" y="330" width="520" height="520" rx="30" fill="#2c3350" stroke="#9fd1ff" stroke-width="5"/>
+    <g stroke="#3d4a75" stroke-width="3"><path d="M140 434 H660 M140 538 H660 M140 642 H660 M140 746 H660 M244 330 V850 M348 330 V850 M452 330 V850 M556 330 V850"/></g>
+    <use href="#snow" x="320" y="500" width="160" height="160"/>
+    <text x="400" y="400" text-anchor="middle" font-size="48" font-weight="900" fill="#fff">W</text>
+    <text x="760" y="620" text-anchor="middle" font-size="110" font-weight="900" fill="#fff">+</text>
+    <rect x="860" y="330" width="70" height="520" rx="14" fill="#ffcf4a"/>
+    <text x="895" y="300" text-anchor="middle" font-size="44" font-weight="900" fill="#ffcf4a">B</text>
+    <text x="980" y="620" text-anchor="middle" font-size="60" font-weight="900" fill="#fff">×</text>
+    <rect x="1030" y="555" width="420" height="70" rx="14" fill="#ff7a59"/>
+    <text x="1240" y="530" text-anchor="middle" font-size="44" font-weight="900" fill="#ff9f84">A</text>
+    <text x="1240" y="700" text-anchor="middle" font-size="32" font-weight="800" fill="#fff" opacity=".85">rank r = 16</text>
+  </svg>
+  <div class="lbl" style="left:400px; top:905px">Frozen base weights</div>
+  <div class="lbl amber" style="left:1100px; top:905px">ΔW = B·A · trainable</div>
+  <div class="stat" style="left:1660px; top:430px; color:#fff"><b style="font-size:120px">~1%</b><span>of weights learn</span></div>
+  <div class="stat" style="left:1660px; top:720px; color:#ffcf4a"><b style="font-size:120px">MBs</b><span>adapter file</span></div>
+</section>
+
+<!-- 9 · QLoRA on a T4 -->
+<section class="slide t-night" style="--accent:#ff6f9c">
+  <div class="cap"><span class="eyebrow">Lesson 3 · QLoRA lab</span><h1>QLoRA on a <em>free T4</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <rect x="110" y="330" width="500" height="430" rx="30" fill="#1b2742" stroke="#5a6a9a" stroke-width="5"/>
+    <g fill="#5cc8ff">
+      <rect x="150" y="370" width="90" height="70" rx="10"/><rect x="255" y="370" width="90" height="70" rx="10"/><rect x="360" y="370" width="90" height="70" rx="10"/><rect x="465" y="370" width="90" height="70" rx="10"/>
+      <rect x="150" y="455" width="90" height="70" rx="10"/><rect x="255" y="455" width="90" height="70" rx="10"/><rect x="360" y="455" width="90" height="70" rx="10"/><rect x="465" y="455" width="90" height="70" rx="10"/>
+      <rect x="150" y="540" width="90" height="70" rx="10"/><rect x="255" y="540" width="90" height="70" rx="10"/><rect x="360" y="540" width="90" height="70" rx="10"/><rect x="465" y="540" width="90" height="70" rx="10"/>
+    </g>
+    <g font-size="28" font-weight="900" fill="#1d2340" text-anchor="middle" class="mono">
+      <text class="mono" x="195" y="415">4b</text><text class="mono" x="300" y="415">4b</text><text class="mono" x="405" y="415">4b</text><text class="mono" x="510" y="415">4b</text>
+      <text class="mono" x="195" y="500">4b</text><text class="mono" x="300" y="500">4b</text><text class="mono" x="405" y="500">4b</text><text class="mono" x="510" y="500">4b</text>
+      <text class="mono" x="195" y="585">4b</text><text class="mono" x="300" y="585">4b</text><text class="mono" x="405" y="585">4b</text><text class="mono" x="510" y="585">4b</text>
+    </g>
+    <rect x="150" y="640" width="405" height="80" rx="14" fill="#ff6f9c"/>
+    <text x="352" y="692" text-anchor="middle" font-size="32" font-weight="900" fill="#fff">LoRA adapter (bf16)</text>
+    <use href="sprites.svg#arrow" x="630" y="530" width="110" height="33" style="--body:#fff"/>
+    <use href="#board" x="770" y="360" width="220" height="308" style="--stripe:#76b900"/>
+    <rect x="1010" y="360" width="70" height="300" rx="16" fill="#2e3f66"/>
+    <rect x="1010" y="490" width="70" height="170" rx="16" fill="#8bd346"/>
+    <text x="1045" y="710" text-anchor="middle" font-size="26" font-weight="900" fill="#fff">16 GB</text>
+    <use href="sprites.svg#arrow" x="1110" y="530" width="110" height="33" style="--body:#fff"/>
+    <use href="sprites.svg#robot" x="1270" y="350" width="230" height="302" style="--body:#ff6f9c;--accent:#ffcf4a"/>
+    <use href="sprites.svg#check" x="1460" y="330" width="90" height="90"/>
+    <g fill="#fff"><rect x="1580" y="380" width="240" height="80" rx="40"/><rect x="1580" y="480" width="240" height="80" rx="40"/><rect x="1580" y="580" width="240" height="80" rx="40"/></g>
+    <g font-size="30" font-weight="900" fill="#1d2340" text-anchor="middle"><text x="1700" y="431">NF4</text><text x="1700" y="531">double quant</text><text x="1700" y="631">paged optim</text></g>
+  </svg>
+  <div class="lbl" style="left:360px; top:820px">Base in 4-bit NF4</div>
+  <div class="lbl green" style="left:925px; top:820px">Colab T4</div>
+  <div class="lbl violet" style="left:1385px; top:820px">Merge the adapter</div>
+  <div class="lbl dark sm" style="left:960px; top:920px">Qwen2.5-1.5B · peft + TRL</div>
+</section>
+
+<!-- 10 · preferences -->
+<section class="slide t-rose" style="--accent:#d6336c">
+  <div class="cap"><span class="eyebrow">Lesson 4 · Preferences</span><h1>Some answers are <em>better</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="sprites.svg#group" x="100" y="470" width="420" height="336" style="--shirt:#d6336c"/>
+    <g fill="#fff"><rect x="620" y="330" width="1190" height="230" rx="34"/><rect x="620" y="600" width="1190" height="230" rx="34"/></g>
+    <rect x="620" y="330" width="22" height="230" rx="11" fill="#22c55e"/>
+    <rect x="620" y="600" width="22" height="230" rx="11" fill="#ff5d73"/>
+    <g font-size="32" font-weight="700" fill="#1d2340" font-style="italic">
+      <text x="680" y="420">"Your claim is covered. I've opened ticket</text><text x="680" y="465">#4821, and you'll hear back within a day."</text>
+      <text x="680" y="690">"Your claim is covered, probably. Have you</text><text x="680" y="735">read section 14b of the policy wording?"</text>
+    </g>
+    <use href="sprites.svg#thumbs-up" x="1640" y="380" width="120" height="120" style="--body:#22c55e"/>
+    <use href="sprites.svg#cross" x="1650" y="655" width="110" height="110"/>
+  </svg>
+  <div class="lbl green" style="left:1030px; top:330px">Chosen</div>
+  <div class="lbl red" style="left:1030px; top:600px">Rejected</div>
+  <div class="lbl dark" style="left:310px; top:860px">Reviewers</div>
+  <div class="lbl violet" style="left:1215px; top:900px">Preferences become a training signal</div>
+</section>
+
+<!-- 11 · RLHF vs DPO -->
+<section class="slide t-ocean" style="--accent:#1f6fbf">
+  <div class="cap"><span class="eyebrow">Lesson 4 · Alignment</span><h1>RLHF versus <em>DPO</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <text x="110" y="370" font-size="38" font-weight="900" fill="#fff">RLHF</text>
+    <g fill="#fff"><rect x="300" y="320" width="400" height="200" rx="28"/><rect x="800" y="320" width="400" height="200" rx="28"/><rect x="1300" y="320" width="510" height="200" rx="28"/></g>
+    <use href="sprites.svg#book" x="330" y="360" width="110" height="84"/>
+    <use href="sprites.svg#target" x="830" y="360" width="100" height="100"/>
+    <use href="sprites.svg#gear" x="1330" y="360" width="100" height="100" style="--body:#7c5cff"/>
+    <g font-size="36" font-weight="900" fill="#1d2340"><text x="460" y="420">1 · SFT</text><text x="950" y="400">2 · Reward</text><text x="950" y="445">model</text><text x="1450" y="420">3 · PPO</text></g>
+    <text x="1450" y="470" font-size="28" font-weight="800" fill="#ff7a59">+ KL penalty</text>
+    <use href="sprites.svg#arrow" x="705" y="405" width="90" height="27" style="--body:#ffcf4a"/>
+    <use href="sprites.svg#arrow" x="1205" y="405" width="90" height="27" style="--body:#ffcf4a"/>
+    <text x="110" y="680" font-size="38" font-weight="900" fill="#ffcf4a">DPO</text>
+    <rect x="300" y="600" width="900" height="220" rx="28" fill="#fff"/>
+    <g><rect x="340" y="640" width="380" height="60" rx="16" fill="#22c55e"/><rect x="340" y="720" width="380" height="60" rx="16" fill="#ff5d73"/></g>
+    <g font-size="30" font-weight="900" fill="#fff"><text x="370" y="681">chosen</text><text x="370" y="761">rejected</text></g>
+    <use href="sprites.svg#arrow" x="760" y="695" width="140" height="42" style="--body:#1d2340"/>
+    <text x="1060" y="705" text-anchor="middle" font-size="34" font-weight="900" fill="#1d2340">policy</text>
+    <text x="1060" y="750" text-anchor="middle" font-size="28" font-weight="800" fill="#4a5275">directly</text>
+    <use href="sprites.svg#robot" x="1320" y="570" width="200" height="263" style="--body:#ffcf4a;--accent:#1f6fbf"/>
+  </svg>
+  <div class="lbl coral" style="left:1000px; top:560px">No reward model needed</div>
+  <div class="lbl" style="left:1680px; top:720px">Simpler</div>
+</section>
+
+<!-- 12 · GRPO -->
+<section class="slide t-sunrise" style="--accent:#e2533a">
+  <div class="cap"><span class="eyebrow">Lesson 4 · GRPO</span><h1>Score against <em>the group</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="sprites.svg#robot" x="110" y="430" width="210" height="276" style="--body:#ff7a59;--accent:#ffcf4a"/>
+    <use href="sprites.svg#arrow" x="340" y="560" width="120" height="36" style="--body:#1d2340"/>
+    <rect x="480" y="320" width="900" height="560" rx="34" fill="#fff"/>
+    <line x1="540" y1="800" x2="1340" y2="800" stroke="#c9b2a6" stroke-width="4"/>
+    <g>
+      <rect x="570" y="420" width="130" height="380" rx="14" fill="#22c55e"/>
+      <rect x="760" y="640" width="130" height="160" rx="14" fill="#ff5d73"/>
+      <rect x="950" y="480" width="130" height="320" rx="14" fill="#22c55e"/>
+      <rect x="1140" y="700" width="130" height="100" rx="14" fill="#ff5d73"/>
+    </g>
+    <line x1="540" y1="590" x2="1340" y2="590" stroke="#1d2340" stroke-width="6" stroke-dasharray="20 12"/>
+    <text x="1335" y="575" text-anchor="end" font-size="28" font-weight="900" fill="#1d2340">group average</text>
+    <g font-size="30" font-weight="900" fill="#fff" text-anchor="middle"><text x="635" y="780">A</text><text x="825" y="780">B</text><text x="1015" y="780">C</text><text x="1205" y="780">D</text></g>
+    <g font-size="44" font-weight="900" text-anchor="middle"><text x="635" y="400" fill="#16a34a">+</text><text x="825" y="625" fill="#e2533a">−</text><text x="1015" y="460" fill="#16a34a">+</text><text x="1205" y="685" fill="#e2533a">−</text></g>
+    <rect x="1440" y="330" width="370" height="250" rx="30" fill="#fff"/>
+    <use href="sprites.svg#check" x="1475" y="365" width="80" height="80"/>
+    <g font-size="32" font-weight="900" fill="#1d2340"><text x="1575" y="400">Verifiable</text><text x="1575" y="440">reward</text></g>
+    <text x="1475" y="520" class="mono" font-size="24" font-weight="700" fill="#4a5275">valid ticket JSON?</text>
+    <rect x="1440" y="620" width="370" height="260" rx="30" fill="#1d2340"/>
+    <use href="sprites.svg#warn" x="1475" y="650" width="100" height="88"/>
+    <g font-size="32" font-weight="900" fill="#fff"><text x="1595" y="690">Reward</text><text x="1595" y="730">hacking</text></g>
+    <text x="1475" y="820" font-size="24" font-weight="700" fill="#ffcf4a">gaming the score</text>
+  </svg>
+  <div class="lbl dark sm" style="left:215px; top:760px">Sample a group</div>
+</section>
+
+<!-- 13 · lesson 5: NeMo and PEFT methods -->
+<section class="slide t-mint" style="--accent:#128c7e">
+  <div class="cap"><span class="eyebrow">Lesson 5 · NVIDIA NeMo</span><h1>Scale up <em>with NeMo</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <g>
+      <rect x="110" y="340" width="680" height="140" rx="28" fill="#1d2340"/>
+      <rect x="110" y="510" width="680" height="140" rx="28" fill="#2c3350"/>
+      <rect x="110" y="680" width="680" height="140" rx="28" fill="#4a5275"/>
+    </g>
+    <g fill="#76b900"><rect x="140" y="370" width="16" height="80" rx="8"/><rect x="140" y="540" width="16" height="80" rx="8"/><rect x="140" y="710" width="16" height="80" rx="8"/></g>
+    <g font-size="38" font-weight="900" fill="#fff"><text x="190" y="408">NeMo Framework</text><text x="190" y="578">NeMo RL</text><text x="190" y="748">NeMo Customizer</text></g>
+    <g font-size="26" font-weight="700" fill="#c8f08a"><text x="190" y="448">SFT and LoRA recipes</text><text x="190" y="618">DPO and GRPO at scale</text><text x="190" y="788">fine-tuning as a service</text></g>
+    <rect x="880" y="320" width="930" height="560" rx="34" fill="#fff"/>
+    <g>
+      <rect x="1140" y="370" width="380" height="80" rx="18" fill="#d9e1ef"/>
+      <rect x="1140" y="500" width="380" height="110" rx="18" fill="#5cc8ff"/>
+      <rect x="1140" y="660" width="380" height="110" rx="18" fill="#7c5cff"/>
+    </g>
+    <g font-size="32" font-weight="900" text-anchor="middle"><text x="1330" y="422" fill="#1d2340">Input tokens</text><text x="1330" y="566" fill="#fff">Attention</text><text x="1330" y="726" fill="#fff">MLP</text></g>
+    <g stroke="#1d2340" stroke-width="5"><path d="M1330 450 V500 M1330 610 V660"/></g>
+    <rect x="920" y="370" width="180" height="80" rx="18" fill="#ffb020"/>
+    <text x="1010" y="421" text-anchor="middle" font-size="28" font-weight="900" fill="#1d2340">p-tuning</text>
+    <rect x="1560" y="510" width="210" height="90" rx="18" fill="#ff6f9c"/>
+    <text x="1665" y="566" text-anchor="middle" font-size="30" font-weight="900" fill="#fff">LoRA</text>
+    <rect x="1230" y="615" width="200" height="40" rx="12" fill="#22b8a6"/>
+    <text x="1330" y="645" text-anchor="middle" font-size="24" font-weight="900" fill="#fff">adapter</text>
+    <rect x="1560" y="670" width="210" height="90" rx="18" fill="#ff7a59"/>
+    <text x="1665" y="726" text-anchor="middle" font-size="30" font-weight="900" fill="#fff">IA3</text>
+    <g stroke="#1d2340" stroke-width="4" stroke-dasharray="8 6"><path d="M1100 410 H1140 M1520 555 H1560 M1520 715 H1560"/></g>
+    <text x="1345" y="840" text-anchor="middle" font-size="28" font-weight="800" fill="#4a5275">where each method adds parameters</text>
+  </svg>
+</section>
+
+<!-- 14 · catastrophic forgetting -->
+<section class="slide t-lilac" style="--accent:#6a45e8">
+  <div class="cap"><span class="eyebrow">Lesson 5 · Forgetting</span><h1>Keep the <em>old skills</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="sprites.svg#robot" x="160" y="440" width="240" height="315" style="--body:#7c5cff;--accent:#ffcf4a"/>
+    <g>
+      <circle cx="560" cy="400" r="70" fill="#fff"/><circle cx="700" cy="560" r="70" fill="#fff"/><circle cx="560" cy="720" r="70" fill="#fff"/>
+    </g>
+    <use href="sprites.svg#globe" x="515" y="355" width="90" height="90"/>
+    <use href="sprites.svg#brain" x="650" y="520" width="100" height="87"/>
+    <use href="sprites.svg#chat" x="505" y="680" width="110" height="87"/>
+    <rect x="160" y="300" width="240" height="100" rx="22" fill="#ffb020"/>
+    <text x="280" y="362" text-anchor="middle" font-size="32" font-weight="900" fill="#1d2340">+ new skill</text>
+    <g font-size="26" font-weight="800" fill="#4a5275" text-anchor="middle"><text x="560" y="500">languages</text><text x="700" y="660">reasoning</text><text x="560" y="820">general chat</text></g>
+    <g fill="#fff"><rect x="900" y="330" width="910" height="150" rx="34"/><rect x="900" y="510" width="910" height="150" rx="34"/><rect x="900" y="690" width="910" height="150" rx="34"/></g>
+    <use href="sprites.svg#chart-down" x="930" y="355" width="130" height="98" style="--c1:#7c5cff"/>
+    <use href="sprites.svg#clock" x="945" y="535" width="100" height="100" style="--body:#22b8a6"/>
+    <use href="sprites.svg#coins" x="935" y="710" width="120" height="106"/>
+    <g font-size="40" font-weight="900" fill="#1d2340"><text x="1100" y="420">Lower learning rate</text><text x="1100" y="600">Fewer epochs</text><text x="1100" y="780">Mix in general data</text></g>
+    <g font-size="26" font-weight="700" fill="#4a5275"><text x="1100" y="458">smaller moves from the original</text><text x="1100" y="638">stop before over-specialising</text><text x="1100" y="818">replay 5–30% general examples</text></g>
+  </svg>
+  <div class="lbl red" style="left:430px; top:920px">Catastrophic forgetting</div>
+</section>
+
+<!-- 15 · on the exam -->
+<section class="slide t-sand" style="--accent:#b5561d">
+  <div class="cap"><span class="eyebrow">On the exam</span><h1>Choose, size, <em>align</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="sprites.svg#target" x="170" y="330" width="300" height="300"/>
+    <use href="sprites.svg#arrow" x="330" y="350" width="220" height="66" transform="rotate(145 440 383)" style="--body:#1d2340"/>
+    <g fill="#fff"><rect x="640" y="320" width="1170" height="116" rx="58"/><rect x="640" y="460" width="1170" height="116" rx="58"/><rect x="640" y="600" width="1170" height="116" rx="58"/><rect x="640" y="740" width="1170" height="116" rx="58"/></g>
+    <use href="sprites.svg#check" x="670" y="340" width="76" height="76"/>
+    <use href="sprites.svg#check" x="670" y="480" width="76" height="76"/>
+    <use href="sprites.svg#check" x="670" y="620" width="76" height="76"/>
+    <use href="sprites.svg#check" x="670" y="760" width="76" height="76"/>
+    <g font-size="40" font-weight="800" fill="#1d2340">
+      <text x="770" y="392">Prompting vs RAG vs fine-tuning</text>
+      <text x="770" y="532">LoRA and QLoRA memory math</text>
+      <text x="770" y="672">DPO versus RLHF with PPO</text>
+      <text x="770" y="812">Spotting and preventing forgetting</text>
+    </g>
+  </svg>
+  <div class="stat" style="left:320px; top:770px; color:#b5561d"><b style="font-size:130px">13%</b><span>of the exam</span></div>
+</section>
+
+<!-- 16 · what you'll be able to do -->
+<section class="slide t-teal" style="--accent:#0b7f75">
+  <div class="cap"><span class="eyebrow">By the end of Module 4</span><h1>Fine-tune, align, <em>ship</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <g fill="#fff"><rect x="110" y="340" width="360" height="400" rx="34"/><rect x="510" y="340" width="360" height="400" rx="34"/><rect x="910" y="340" width="360" height="400" rx="34"/><rect x="1310" y="340" width="360" height="400" rx="34"/></g>
+    <use href="sprites.svg#question" x="230" y="380" width="120" height="120" style="--body:#7c5cff"/>
+    <use href="sprites.svg#puzzle" x="630" y="380" width="120" height="120" style="--body:#22b8a6"/>
+    <use href="sprites.svg#thumbs-up" x="1030" y="380" width="120" height="120" style="--body:#ff7a59"/>
+    <use href="sprites.svg#flag" x="1445" y="370" width="100" height="133" style="--body:#ffb020"/>
+    <g font-size="46" font-weight="900" fill="#1d2340" text-anchor="middle"><text x="290" y="590">Choose</text><text x="690" y="590">Fine-tune</text><text x="1090" y="590">Align</text><text x="1490" y="590">Ship</text></g>
+    <g font-size="26" font-weight="700" fill="#4a5275" text-anchor="middle"><text x="290" y="640">prompt · RAG · PEFT</text><text x="690" y="640">SFT · LoRA · QLoRA</text><text x="1090" y="640">DPO · GRPO</text><text x="1490" y="640">merge and deploy</text></g>
+    <use href="sprites.svg#robot" x="1700" y="470" width="170" height="223" style="--body:#ffcf4a;--accent:#0b7f75"/>
+    <use href="sprites.svg#sparkle" x="1760" y="360" width="80" height="80"/>
+  </svg>
+  <div class="lbl dark lg" style="left:890px; top:860px">Next · Lesson 1: Choosing an adaptation method →</div>
+</section>
+
+</body>
+</html>

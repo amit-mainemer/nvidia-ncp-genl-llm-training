@@ -1,0 +1,141 @@
+WEBVTT
+
+1
+00:00:00.300 --> 00:00:03.258
+Welcome to Module Seven: Model Optimization.
+
+2
+00:00:03.588 --> 00:00:07.335
+Here, a trained model becomes smaller, faster, and cheaper to serve.
+
+3
+00:00:08.135 --> 00:00:12.309
+Picture a team that just fine-tuned an eight-billion-parameter support assistant.
+
+4
+00:00:12.639 --> 00:00:14.829
+It aces every test, so they launch it.
+
+5
+00:00:15.629 --> 00:00:18.929
+On launch day, the GPU bill arrives before the praise.
+
+6
+00:00:19.259 --> 00:00:24.670
+Each replica needs a whole H100, and answers crawl once fifty people chat at once.
+
+7
+00:00:25.470 --> 00:00:27.553
+The model isn't too dumb; it's too heavy.
+
+8
+00:00:27.883 --> 00:00:31.375
+Every token streams sixteen gigabytes of weights through memory.
+
+9
+00:00:32.175 --> 00:00:35.154
+The first fix is quantization: fewer bits per weight.
+
+10
+00:00:35.484 --> 00:00:40.042
+FP8 halves the bytes and INT4 quarters them, with little accuracy lost.
+
+11
+00:00:40.842 --> 00:00:44.312
+You'll compute the scales that map real values onto a few levels.
+
+12
+00:00:44.642 --> 00:00:49.648
+Then you'll compare GPTQ, AWQ, and SmoothQuant, and measure the trade-off.
+
+13
+00:00:50.448 --> 00:00:52.489
+The second route is fewer parameters.
+
+14
+00:00:52.819 --> 00:00:55.563
+Structured pruning removes whole layers or channels.
+
+15
+00:00:56.363 --> 00:00:59.931
+Then the original model teaches the pruned one to recover,
+
+16
+00:00:59.981 --> 00:01:02.052
+which is NVIDIA's Minitron recipe.
+
+17
+00:01:02.382 --> 00:01:05.340
+Its students beat same-size models trained from scratch.
+
+18
+00:01:06.140 --> 00:01:08.415
+Next, you'll look inside the inference engine.
+
+19
+00:01:08.745 --> 00:01:11.878
+Prefill reads the prompt in one compute-heavy pass,
+
+20
+00:01:11.928 --> 00:01:15.373
+then decode writes tokens one by one, limited by memory.
+
+21
+00:01:16.173 --> 00:01:19.920
+Every token leaves keys and values behind in the KV cache.
+
+22
+00:01:20.250 --> 00:01:23.379
+Its size decides how many users fit on one GPU.
+
+23
+00:01:24.179 --> 00:01:28.118
+Paged attention stores that cache in small blocks, so little is wasted.
+
+24
+00:01:28.448 --> 00:01:32.110
+In-flight batching lets new requests join the moment others finish.
+
+25
+00:01:32.910 --> 00:01:36.871
+Speculative decoding lets a fast draft guess several tokens ahead.
+
+26
+00:01:37.201 --> 00:01:41.823
+The big model checks them in one pass, so the output is identical, just quicker.
+
+27
+00:01:42.623 --> 00:01:47.821
+Then you'll build engines with TensorRT-LLM, NVIDIA's fast inference library.
+
+28
+00:01:48.151 --> 00:01:51.450
+You'll set its cache and batch limits, and serve it behind Triton.
+
+29
+00:01:52.250 --> 00:01:55.933
+Finally, you'll benchmark with trtllm-bench and tune.
+
+30
+00:01:56.263 --> 00:02:00.800
+Time to first token, time per output token, and throughput pull against each other.
+
+31
+00:02:01.600 --> 00:02:05.689
+For our team, FP8 weights and in-flight batching changed everything.
+
+32
+00:02:06.019 --> 00:02:09.723
+The same model now serves several times the users per GPU.
+
+33
+00:02:10.523 --> 00:02:12.251
+This is the largest exam domain,
+
+34
+00:02:12.301 --> 00:02:15.252
+and you'll leave able to make any model lean and fast.
+
+35
+00:02:15.582 --> 00:02:19.031
+Lesson one is the quantization lab, so let's shrink some weights.

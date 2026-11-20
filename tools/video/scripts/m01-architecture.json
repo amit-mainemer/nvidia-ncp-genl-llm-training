@@ -1,0 +1,143 @@
+{
+  "module": "architecture",
+  "title": "Module 1 intro — LLM Architecture",
+  "voice": "af_heart",
+  "speed": 1.05,
+  "scenes": [
+    {
+      "lines": [
+        "Welcome to Module One: LLM Architecture.",
+        "You'll open up a language model and build a small one yourself."
+      ],
+      "say": {
+        "0": "Welcome to Module One: L L M Architecture."
+      }
+    },
+    {
+      "lines": [
+        "Meet Priya, asked to fine-tune a small open model for her support desk.",
+        "She opens its config file and stares at unfamiliar names."
+      ]
+    },
+    {
+      "lines": [
+        "RoPE theta, KV heads, intermediate size: each one changes memory, speed and cost.",
+        "Without them, she can't tell if it fits her GPU."
+      ],
+      "say": {
+        "0": "Rope theta, K V heads, intermediate size: each one changes memory, speed and cost.",
+        "1": "Without them, she can't tell if it fits her G P U."
+      }
+    },
+    {
+      "lines": [
+        "This module gives her, and you, the map.",
+        "We build up from tensors until that config reads like plain English."
+      ]
+    },
+    {
+      "lines": [
+        "Every LLM, toy or frontier, is trained by the same loop.",
+        "Get a batch, compute the loss, backpropagate, and update the weights."
+      ],
+      "say": {
+        "0": "Every L L M, toy or frontier, is trained by the same loop."
+      }
+    },
+    {
+      "lines": [
+        "Lesson one teaches the PyTorch behind it: tensor shapes and autograd.",
+        "You'll train a tiny bigram model on Shakespeare in under a minute."
+      ]
+    },
+    {
+      "lines": [
+        "Lesson two adds self-attention.",
+        "Each token's query meets earlier tokens' keys and gathers a mix of their values."
+      ]
+    },
+    {
+      "lines": [
+        "A causal mask hides the future, and several heads look for different patterns.",
+        "Add an MLP and residual connections, and you have a transformer block."
+      ],
+      "say": {
+        "1": "Add an M L P and residual connections, and you have a transformer block."
+      }
+    },
+    {
+      "lines": [
+        "In the lab, you stack those blocks into a three-million-parameter GPT.",
+        "You'll watch it go from random characters to passable Shakespeare."
+      ],
+      "say": {
+        "0": "In the lab, you stack those blocks into a three million parameter G P T."
+      }
+    },
+    {
+      "lines": [
+        "You'll steer it with temperature and top-k sampling.",
+        "And you'll predict its size with the 12·L·d² rule."
+      ],
+      "say": {
+        "0": "You'll steer it with temperature and top K sampling.",
+        "1": "And you'll predict its size with the twelve L D squared rule."
+      }
+    },
+    {
+      "lines": [
+        "Lesson four brings that 2019 design up to date.",
+        "Modern models add rotary positions, RMSNorm and SwiGLU layers."
+      ],
+      "say": {
+        "0": "Lesson four brings that twenty nineteen design up to date.",
+        "1": "Modern models add rotary positions, R M S norm, and swish G L U layers."
+      }
+    },
+    {
+      "lines": [
+        "Grouped-query attention lets many query heads share a few key-value heads.",
+        "That shrinks the KV cache, which decides how many users a GPU can serve."
+      ],
+      "say": {
+        "1": "That shrinks the K V cache, which decides how many users a G P U can serve."
+      }
+    },
+    {
+      "lines": [
+        "Mixture-of-experts models send each token to just a few experts.",
+        "Mixtral 8×7B holds 47 billion parameters, but each token uses about 13 billion."
+      ],
+      "say": {
+        "1": "Mixtral eight by seven B holds forty seven billion parameters, but each token uses about thirteen billion."
+      }
+    },
+    {
+      "lines": [
+        "Scaling laws tell you how to spend a compute budget.",
+        "Chinchilla's rule of thumb: about 20 training tokens per parameter."
+      ],
+      "say": {
+        "1": "Chinchilla's rule of thumb: about twenty training tokens per parameter."
+      }
+    },
+    {
+      "lines": [
+        "Back to Priya: 24 layers, 14 query heads sharing 2 KV heads.",
+        "Now she can estimate memory and explain the model."
+      ],
+      "say": {
+        "0": "Back to Priya: twenty four layers, fourteen query heads sharing two K V heads."
+      }
+    },
+    {
+      "lines": [
+        "By the end, you'll have trained your own GPT and can read any model config.",
+        "Let's begin with lesson one: tensors, autograd and your first training loop."
+      ],
+      "say": {
+        "0": "By the end, you'll have trained your own G P T and can read any model config."
+      }
+    }
+  ]
+}

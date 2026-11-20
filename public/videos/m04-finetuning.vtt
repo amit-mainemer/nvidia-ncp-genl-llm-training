@@ -1,0 +1,133 @@
+WEBVTT
+
+1
+00:00:00.300 --> 00:00:02.618
+Welcome to Module Four: Fine-Tuning.
+
+2
+00:00:02.948 --> 00:00:06.717
+You'll learn when to fine-tune, and how to do it well on one GPU.
+
+3
+00:00:07.517 --> 00:00:11.435
+Picture an insurance company whose support assistant keeps going off script.
+
+4
+00:00:11.765 --> 00:00:15.277
+It rambles, ignores the house tone, and breaks the ticket format.
+
+5
+00:00:16.077 --> 00:00:20.187
+The team's first instinct is to fine-tune it on every policy document.
+
+6
+00:00:20.517 --> 00:00:24.158
+But policies change weekly, so the model would be stale by Monday.
+
+7
+00:00:24.958 --> 00:00:29.175
+Lesson one sorts the levers, from prompting and RAG to full fine-tuning.
+
+8
+00:00:29.505 --> 00:00:34.233
+Missing knowledge needs retrieval; behaviour, format, and style need fine-tuning.
+
+9
+00:00:35.033 --> 00:00:38.503
+So the team keeps RAG for facts, and fine-tunes for behaviour.
+
+10
+00:00:38.833 --> 00:00:44.629
+Lesson two's lab runs supervised fine-tuning of a small Qwen model with TRL.
+
+11
+00:00:45.429 --> 00:00:49.197
+You'll train only on the assistant's replies, with the right chat template.
+
+12
+00:00:49.527 --> 00:00:53.125
+Then you'll compare outputs before and after, and read the loss curves.
+
+13
+00:00:53.925 --> 00:00:56.121
+But fully fine-tuning a seven billion
+
+14
+00:00:56.171 --> 00:00:58.974
+parameter model needs over a hundred gigabytes.
+
+15
+00:00:59.304 --> 00:01:00.683
+That's where LoRA comes in.
+
+16
+00:01:01.483 --> 00:01:05.871
+LoRA freezes the base model and trains two small matrices beside each layer.
+
+17
+00:01:06.201 --> 00:01:10.460
+Only a tiny fraction of the weights learn, and the adapter is just megabytes.
+
+18
+00:01:11.260 --> 00:01:15.178
+QLoRA goes further, loading the frozen base in four-bit precision.
+
+19
+00:01:15.508 --> 00:01:20.898
+In the lab, you'll QLoRA-tune Qwen on a free Colab T4, then merge the adapter.
+
+20
+00:01:21.698 --> 00:01:25.723
+Now the format is right, but reviewers still prefer some answers over others.
+
+21
+00:01:26.053 --> 00:01:29.224
+Lesson four turns those preferences into a training signal.
+
+22
+00:01:30.024 --> 00:01:34.774
+Classic RLHF trains a reward model, then optimizes with PPO.
+
+23
+00:01:35.104 --> 00:01:40.046
+DPO skips the reward model and learns straight from chosen and rejected pairs.
+
+24
+00:01:40.846 --> 00:01:44.849
+GRPO scores a group of sampled answers against each other.
+
+25
+00:01:45.179 --> 00:01:48.863
+With checkable rewards it's powerful, but watch for reward hacking.
+
+26
+00:01:49.663 --> 00:01:53.261
+Lesson five maps it all to NVIDIA NeMo, at cluster scale.
+
+27
+00:01:53.591 --> 00:01:58.426
+You'll compare p-tuning, adapters, IA3, and LoRA by where they add parameters.
+
+28
+00:01:59.226 --> 00:02:03.869
+You'll also guard against catastrophic forgetting, where new skills erase old ones.
+
+29
+00:02:04.199 --> 00:02:08.843
+Lower learning rates, fewer epochs, and mixed-in general data protect old skills.
+
+30
+00:02:09.643 --> 00:02:12.174
+Fine-tuning is thirteen percent of the exam.
+
+31
+00:02:12.504 --> 00:02:17.425
+Expect method choice, LoRA memory math, and DPO versus RLHF.
+
+32
+00:02:18.225 --> 00:02:23.209
+By the end, you'll fine-tune, align, and ship a small model on a single GPU.
+
+33
+00:02:23.539 --> 00:02:26.753
+Let's begin with lesson one: choosing an adaptation method.

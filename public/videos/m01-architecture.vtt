@@ -1,0 +1,129 @@
+WEBVTT
+
+1
+00:00:00.300 --> 00:00:03.450
+Welcome to Module One: LLM Architecture.
+
+2
+00:00:03.780 --> 00:00:06.951
+You'll open up a language model and build a small one yourself.
+
+3
+00:00:07.751 --> 00:00:11.797
+Meet Priya, asked to fine-tune a small open model for her support desk.
+
+4
+00:00:12.127 --> 00:00:15.576
+She opens its config file and stares at unfamiliar names.
+
+5
+00:00:16.376 --> 00:00:21.766
+RoPE theta, KV heads, intermediate size: each one changes memory, speed and cost.
+
+6
+00:00:22.096 --> 00:00:24.841
+Without them, she can't tell if it fits her GPU.
+
+7
+00:00:25.641 --> 00:00:27.660
+This module gives her, and you, the map.
+
+8
+00:00:27.990 --> 00:00:31.759
+We build up from tensors until that config reads like plain English.
+
+9
+00:00:32.559 --> 00:00:36.370
+Every LLM, toy or frontier, is trained by the same loop.
+
+10
+00:00:36.700 --> 00:00:40.298
+Get a batch, compute the loss, backpropagate, and update the weights.
+
+11
+00:00:41.098 --> 00:00:45.592
+Lesson one teaches the PyTorch behind it: tensor shapes and autograd.
+
+12
+00:00:45.922 --> 00:00:49.157
+You'll train a tiny bigram model on Shakespeare in under a minute.
+
+13
+00:00:49.957 --> 00:00:51.785
+Lesson two adds self-attention.
+
+14
+00:00:52.115 --> 00:00:56.737
+Each token's query meets earlier tokens' keys and gathers a mix of their values.
+
+15
+00:00:57.537 --> 00:01:01.732
+A causal mask hides the future, and several heads look for different patterns.
+
+16
+00:01:02.062 --> 00:01:06.364
+Add an MLP and residual connections, and you have a transformer block.
+
+17
+00:01:07.164 --> 00:01:11.466
+In the lab, you stack those blocks into a three-million-parameter GPT.
+
+18
+00:01:11.796 --> 00:01:15.138
+You'll watch it go from random characters to passable Shakespeare.
+
+19
+00:01:15.938 --> 00:01:18.448
+You'll steer it with temperature and top-k sampling.
+
+20
+00:01:18.778 --> 00:01:22.013
+And you'll predict its size with the 12·L·d² rule.
+
+21
+00:01:22.813 --> 00:01:25.771
+Lesson four brings that 2019 design up to date.
+
+22
+00:01:26.101 --> 00:01:31.193
+Modern models add rotary positions, RMSNorm and SwiGLU layers.
+
+23
+00:01:31.993 --> 00:01:36.081
+Grouped-query attention lets many query heads share a few key-value heads.
+
+24
+00:01:36.411 --> 00:01:41.183
+That shrinks the KV cache, which decides how many users a GPU can serve.
+
+25
+00:01:41.983 --> 00:01:45.965
+Mixture-of-experts models send each token to just a few experts.
+
+26
+00:01:46.295 --> 00:01:53.007
+Mixtral 8×7B holds 47 billion parameters, but each token uses about 13 billion.
+
+27
+00:01:53.807 --> 00:01:56.680
+Scaling laws tell you how to spend a compute budget.
+
+28
+00:01:57.010 --> 00:02:00.885
+Chinchilla's rule of thumb: about 20 training tokens per parameter.
+
+29
+00:02:01.685 --> 00:02:06.201
+Back to Priya: 24 layers, 14 query heads sharing 2 KV heads.
+
+30
+00:02:06.531 --> 00:02:09.297
+Now she can estimate memory and explain the model.
+
+31
+00:02:10.097 --> 00:02:14.420
+By the end, you'll have trained your own GPT and can read any model config.
+
+32
+00:02:14.750 --> 00:02:19.095
+Let's begin with lesson one: tensors, autograd and your first training loop.

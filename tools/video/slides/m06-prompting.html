@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Module 6 intro slides</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, Consolas, monospace; }
+</style>
+</head>
+<body>
+
+<!-- local shapes: prompt bubble, document stack, dial, code card, vector chip -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bubble" viewBox="0 0 300 200">
+    <path d="M24 0 h252 a24 24 0 0 1 24 24 v116 a24 24 0 0 1 -24 24 h-190 l-46 36 l6 -36 h-22 a24 24 0 0 1 -24 -24 v-116 a24 24 0 0 1 24 -24z" fill="var(--body, #fff)"/>
+  </symbol>
+  <symbol id="docstack" viewBox="0 0 170 190">
+    <rect x="40" y="0" width="130" height="160" rx="12" fill="#c7cde6"/>
+    <rect x="20" y="15" width="130" height="160" rx="12" fill="#e3e7f5"/>
+    <rect x="0" y="30" width="130" height="160" rx="12" fill="#fff"/>
+    <rect x="18" y="52" width="50" height="14" rx="7" fill="var(--accent, #22b8a6)"/>
+    <g fill="#c7cde6"><rect x="18" y="84" width="94" height="10" rx="5"/><rect x="18" y="106" width="94" height="10" rx="5"/><rect x="18" y="128" width="70" height="10" rx="5"/><rect x="18" y="150" width="86" height="10" rx="5"/></g>
+  </symbol>
+  <symbol id="dial" viewBox="0 0 160 160">
+    <circle cx="80" cy="80" r="76" fill="#2c3350"/>
+    <circle cx="80" cy="80" r="56" fill="var(--knob, #7c5cff)"/>
+    <rect x="74" y="30" width="12" height="44" rx="6" fill="#fff" style="transform-origin:80px 80px; transform: rotate(calc(var(--rot, 30) * 1deg))"/>
+    <g fill="#9aa3c7"><circle cx="20" cy="120" r="6"/><circle cx="10" cy="80" r="6"/><circle cx="20" cy="40" r="6"/><circle cx="140" cy="40" r="6"/><circle cx="150" cy="80" r="6"/><circle cx="140" cy="120" r="6"/></g>
+  </symbol>
+  <symbol id="chunk" viewBox="0 0 120 70">
+    <rect x="0" y="0" width="120" height="70" rx="12" fill="#fff"/>
+    <rect x="0" y="0" width="14" height="70" rx="7" fill="var(--accent, #22b8a6)"/>
+    <g fill="#c7cde6"><rect x="26" y="16" width="80" height="9" rx="4.5"/><rect x="26" y="32" width="70" height="9" rx="4.5"/><rect x="26" y="48" width="50" height="9" rx="4.5"/></g>
+  </symbol>
+  <symbol id="vec" viewBox="0 0 160 40">
+    <rect x="0" y="0" width="160" height="40" rx="10" fill="#1d2340"/>
+    <g><rect x="8" y="8" width="24" height="24" rx="5" fill="#7c5cff"/><rect x="38" y="8" width="24" height="24" rx="5" fill="#22b8a6" opacity=".7"/><rect x="68" y="8" width="24" height="24" rx="5" fill="#ffb020"/><rect x="98" y="8" width="24" height="24" rx="5" fill="#ff6f9c" opacity=".6"/><rect x="128" y="8" width="24" height="24" rx="5" fill="#5cc8ff"/></g>
+  </symbol>
+</svg>
+
+<!-- 1 · welcome -->
+<section class="slide t-plum" style="--accent:#7b2ff7">
+  <div class="cap"><span class="eyebrow">Module 6 · Prompt Engineering</span><h1>Better answers, <em>same weights</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="#bubble" x="110" y="380" width="480" height="320"/>
+    <g font-size="40" font-weight="800" fill="#1d2340"><text x="160" y="470">You are an IT</text><text x="160" y="530">assistant. Answer</text><text x="160" y="590">from the runbook…</text></g>
+    <use href="sprites.svg#arrow" x="620" y="530" width="180" height="54" style="--body:#fff"/>
+    <use href="sprites.svg#robot" x="820" y="360" width="300" height="394" style="--body:#ffb020"/>
+    <use href="sprites.svg#lock" x="1060" y="350" width="100" height="125"/>
+    <use href="sprites.svg#arrow" x="1170" y="530" width="180" height="54" style="--body:#fff"/>
+    <rect x="1380" y="380" width="430" height="320" rx="28" fill="#1d2340"/>
+    <g class="mono" font-size="32" font-weight="700">
+      <text class="mono" x="1420" y="450" fill="#fff">{</text>
+      <text class="mono" x="1450" y="510" fill="#5cc8ff">"fix": <tspan fill="#8bd346">"restart"</tspan>,</text>
+      <text class="mono" x="1450" y="570" fill="#5cc8ff">"source": <tspan fill="#ffcf4a">"§4.2"</tspan></text>
+      <text class="mono" x="1420" y="630" fill="#fff">}</text>
+    </g>
+    <use href="sprites.svg#sparkle" x="1760" y="320" width="80" height="80"/>
+  </svg>
+  <div class="lbl violet lg" style="left:350px; top:860px">Prompts</div>
+  <div class="lbl amber lg" style="left:970px; top:860px">Decoding</div>
+  <div class="lbl teal lg" style="left:1595px; top:860px">RAG</div>
+</section>
+
+<!-- 2 · the IT team -->
+<section class="slide t-sand" style="--accent:#b5561d">
+  <div class="cap"><span class="eyebrow">A real-world case</span><h1>An assistant for <em>the runbooks</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="sprites.svg#group" x="100" y="480" width="450" height="360" style="--shirt:#22b8a6"/>
+    <use href="sprites.svg#server" x="590" y="500" width="180" height="252"/>
+    <use href="#docstack" x="830" y="380" width="320" height="358" style="--accent:#b5561d"/>
+    <use href="sprites.svg#book" x="860" y="750" width="200" height="153"/>
+    <use href="sprites.svg#robot" x="1240" y="420" width="260" height="341" style="--body:#7c5cff"/>
+    <use href="sprites.svg#question" x="1430" y="340" width="110" height="110"/>
+    <use href="sprites.svg#coins" x="1600" y="560" width="200" height="176"/>
+    <use href="sprites.svg#cross" x="1720" y="500" width="110" height="110"/>
+  </svg>
+  <div class="lbl dark" style="left:325px; top:900px">IT team</div>
+  <div class="lbl" style="left:990px; top:330px">Internal runbooks</div>
+  <div class="lbl red" style="left:1660px; top:830px">No training budget</div>
+</section>
+
+<!-- 3 · first attempt -->
+<section class="slide t-coral" style="--accent:#e2533a">
+  <div class="cap"><span class="eyebrow">First attempt</span><h1>A one-line <em>prompt</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="#bubble" x="100" y="380" width="460" height="306"/>
+    <g font-size="40" font-weight="800" fill="#1d2340"><text x="150" y="480">"Answer the</text><text x="150" y="540">user's question."</text></g>
+    <use href="sprites.svg#robot-sad" x="620" y="400" width="280" height="368" style="--body:#7c5cff"/>
+    <rect x="980" y="340" width="840" height="200" rx="26" fill="#fff"/>
+    <g fill="#d6dcf0"><rect x="1020" y="380" width="760" height="18" rx="9"/><rect x="1020" y="415" width="720" height="18" rx="9"/><rect x="1020" y="450" width="760" height="18" rx="9"/><rect x="1020" y="485" width="640" height="18" rx="9"/></g>
+    <rect x="980" y="570" width="840" height="110" rx="26" fill="#fff"/>
+    <text x="1020" y="640" font-size="40" font-weight="800" fill="#1d2340">Restart <tspan fill="#e2533a" font-weight="900">srv-prod-77</tspan> (doesn't exist)</text>
+    <rect x="980" y="710" width="840" height="130" rx="26" fill="#1d2340"/>
+    <text class="mono" x="1020" y="790" font-size="40" font-weight="700" fill="#ff9a8b">{"priority": "P1", "fix":</text>
+    <use href="sprites.svg#warn" x="1720" y="740" width="110" height="97"/>
+  </svg>
+  <div class="lbl dark" style="left:1400px; top:300px">Rambling</div>
+  <div class="lbl red" style="left:1400px; top:895px">Broken JSON</div>
+</section>
+
+<!-- 4 · no new weights -->
+<section class="slide t-lilac" style="--accent:#6a4be0">
+  <div class="cap"><span class="eyebrow">The fix</span><h1>Three levers, <em>no training</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <g fill="#fff"><rect x="110" y="340" width="480" height="460" rx="30"/><rect x="720" y="340" width="480" height="460" rx="30"/><rect x="1330" y="340" width="480" height="460" rx="30"/></g>
+    <use href="sprites.svg#chat" x="235" y="390" width="230" height="182" style="--body:#ede6ff"/>
+    <use href="#dial" x="845" y="380" width="230" height="230" style="--knob:#ffb020; --rot:-30"/>
+    <use href="#docstack" x="1460" y="380" width="210" height="235" style="--accent:#22b8a6"/>
+    <g font-size="44" font-weight="900" fill="#1d2340" text-anchor="middle"><text x="350" y="680">Better prompt</text><text x="960" y="680">Decoding</text><text x="1570" y="680">Documents</text></g>
+    <g font-size="28" font-weight="800" fill="#4a5275" text-anchor="middle"><text x="350" y="740">roles · examples</text><text x="960" y="740">temperature · JSON</text><text x="1570" y="740">retrieval in context</text></g>
+  </svg>
+  <div class="lbl violet" style="left:960px; top:880px">Model weights stay frozen</div>
+</section>
+
+<!-- 5 · lesson 1: in-context learning -->
+<section class="slide t-sky" style="--accent:#1f6fbf">
+  <div class="cap"><span class="eyebrow">Lesson 1 · Prompting basics</span><h1>Learning <em>in context</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <rect x="110" y="330" width="1060" height="560" rx="30" fill="#fff"/>
+    <text x="150" y="395" font-size="28" font-weight="900" fill="#4a5275" letter-spacing="3">PROMPT</text>
+    <g font-size="40" font-weight="800">
+      <rect x="140" y="425" width="1000" height="90" rx="18" fill="#e7f5ff"/>
+      <text x="170" y="485" fill="#1d2340">Disk full on /var  →  <tspan fill="#1f6fbf">storage</tspan></text>
+      <rect x="140" y="535" width="1000" height="90" rx="18" fill="#e7f5ff"/>
+      <text x="170" y="595" fill="#1d2340">VPN tunnel down  →  <tspan fill="#1f6fbf">network</tspan></text>
+      <rect x="140" y="645" width="1000" height="90" rx="18" fill="#e7f5ff"/>
+      <text x="170" y="705" fill="#1d2340">Cert expired  →  <tspan fill="#1f6fbf">security</tspan></text>
+      <rect x="140" y="765" width="1000" height="90" rx="18" fill="#fff3cc"/>
+      <text x="170" y="825" fill="#1d2340">GPU fell off the bus  →  <tspan fill="#c25e00">?</tspan></text>
+    </g>
+    <use href="sprites.svg#robot" x="1300" y="380" width="300" height="394" style="--body:#22b8a6"/>
+    <use href="sprites.svg#lock" x="1600" y="400" width="110" height="138"/>
+    <use href="sprites.svg#sparkle" x="1660" y="620" width="90" height="90"/>
+  </svg>
+  <div class="lbl dark" style="left:1480px; top:850px">No gradient update</div>
+</section>
+
+<!-- 6 · zero-shot vs few-shot -->
+<section class="slide t-mint" style="--accent:#0f8a5f">
+  <div class="cap"><span class="eyebrow">Lesson 1 · Shots</span><h1>Zero-shot vs <em>few-shot</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <rect x="110" y="340" width="700" height="500" rx="30" fill="#fff"/>
+    <text x="460" y="420" text-anchor="middle" font-size="44" font-weight="900" fill="#1d2340">Zero-shot</text>
+    <rect x="170" y="480" width="580" height="110" rx="20" fill="#7c5cff"/>
+    <text x="460" y="550" text-anchor="middle" font-size="36" font-weight="800" fill="#fff">Instruction</text>
+    <rect x="170" y="620" width="580" height="110" rx="20" fill="#ffcf4a"/>
+    <text x="460" y="690" text-anchor="middle" font-size="36" font-weight="800" fill="#1d2340">Question</text>
+    <rect x="900" y="340" width="910" height="500" rx="30" fill="#fff"/>
+    <text x="1355" y="420" text-anchor="middle" font-size="44" font-weight="900" fill="#1d2340">Few-shot</text>
+    <rect x="960" y="480" width="790" height="80" rx="18" fill="#7c5cff"/>
+    <text x="1355" y="533" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">Instruction</text>
+    <g>
+      <rect x="960" y="580" width="250" height="80" rx="18" fill="#22b8a6"/>
+      <rect x="1230" y="580" width="250" height="80" rx="18" fill="#ff7a59"/>
+      <rect x="1500" y="580" width="250" height="80" rx="18" fill="#5cc8ff"/>
+    </g>
+    <g font-size="30" font-weight="800" fill="#fff" text-anchor="middle"><text x="1085" y="632">example 1</text><text x="1355" y="632">example 2</text><text x="1625" y="632">example 3</text></g>
+    <rect x="960" y="680" width="790" height="80" rx="18" fill="#ffcf4a"/>
+    <text x="1355" y="733" text-anchor="middle" font-size="34" font-weight="800" fill="#1d2340">Question</text>
+  </svg>
+  <div class="lbl dark" style="left:1355px; top:890px">Choose · balance · order the examples</div>
+</section>
+
+<!-- 7 · roles and chat template -->
+<section class="slide t-ocean" style="--accent:#1f6fbf">
+  <div class="cap"><span class="eyebrow">Lesson 1 · Chat templates</span><h1>Roles become <em>tokens</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <g font-size="36" font-weight="800">
+      <rect x="110" y="340" width="640" height="130" rx="26" fill="#ffcf4a"/>
+      <text x="150" y="398" font-size="26" font-weight="900" fill="#7a4b00" letter-spacing="3">SYSTEM</text>
+      <text x="150" y="445" fill="#1d2340">You are an IT assistant.</text>
+      <rect x="110" y="500" width="640" height="130" rx="26" fill="#fff"/>
+      <text x="150" y="558" font-size="26" font-weight="900" fill="#1f6fbf" letter-spacing="3">USER</text>
+      <text x="150" y="605" fill="#1d2340">VPN keeps dropping.</text>
+      <rect x="110" y="660" width="640" height="130" rx="26" fill="#22b8a6"/>
+      <text x="150" y="718" font-size="26" font-weight="900" fill="#0b4f5c" letter-spacing="3">ASSISTANT</text>
+      <text x="150" y="765" fill="#fff">Check the MTU first…</text>
+    </g>
+    <use href="sprites.svg#arrow" x="780" y="540" width="200" height="60" style="--body:#fff"/>
+    <rect x="1010" y="340" width="810" height="450" rx="28" fill="#0b1630"/>
+    <g class="mono" font-size="30" font-weight="700">
+      <text class="mono" x="1050" y="410" fill="#ff6f9c">&lt;|im_start|&gt;<tspan fill="#ffcf4a">system</tspan></text>
+      <text class="mono" x="1050" y="455" fill="#fff">You are an IT assistant.</text>
+      <text class="mono" x="1050" y="500" fill="#ff6f9c">&lt;|im_end|&gt;</text>
+      <text class="mono" x="1050" y="555" fill="#ff6f9c">&lt;|im_start|&gt;<tspan fill="#5cc8ff">user</tspan></text>
+      <text class="mono" x="1050" y="600" fill="#fff">VPN keeps dropping.</text>
+      <text class="mono" x="1050" y="645" fill="#ff6f9c">&lt;|im_end|&gt;</text>
+      <text class="mono" x="1050" y="700" fill="#ff6f9c">&lt;|im_start|&gt;<tspan fill="#8bd346">assistant</tspan></text>
+      <text class="mono" x="1050" y="750" fill="#9aa3c7">▍</text>
+    </g>
+  </svg>
+  <div class="lbl amber" style="left:1415px; top:860px">apply_chat_template()</div>
+</section>
+
+<!-- 8 · lesson 2: chain-of-thought + self-consistency -->
+<section class="slide t-amber" style="--accent:#c25e00">
+  <div class="cap"><span class="eyebrow">Lesson 2 · Reasoning</span><h1>Think, then <em>vote</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="sprites.svg#robot-head" x="110" y="530" width="200" height="157" style="--body:#7c5cff"/>
+    <g fill="none" stroke="#1d2340" stroke-width="8" stroke-linecap="round">
+      <path d="M320 600 C 380 600, 390 420, 450 420"/><path d="M320 610 H450"/><path d="M320 620 C 380 620, 390 800, 450 800"/>
+    </g>
+    <g>
+      <rect x="460" y="380" width="200" height="80" rx="16" fill="#fff"/><rect x="690" y="380" width="200" height="80" rx="16" fill="#fff"/><rect x="920" y="380" width="200" height="80" rx="16" fill="#fff"/>
+      <rect x="460" y="570" width="200" height="80" rx="16" fill="#fff"/><rect x="690" y="570" width="200" height="80" rx="16" fill="#fff"/><rect x="920" y="570" width="200" height="80" rx="16" fill="#fff"/>
+      <rect x="460" y="760" width="200" height="80" rx="16" fill="#fff"/><rect x="690" y="760" width="200" height="80" rx="16" fill="#fff"/><rect x="920" y="760" width="200" height="80" rx="16" fill="#fff"/>
+    </g>
+    <g font-size="30" font-weight="800" fill="#4a5275" text-anchor="middle">
+      <text x="560" y="431">step 1</text><text x="790" y="431">step 2</text><text x="1020" y="431">step 3</text>
+      <text x="560" y="621">step 1</text><text x="790" y="621">step 2</text><text x="1020" y="621">step 3</text>
+      <text x="560" y="811">step 1</text><text x="790" y="811">step 2</text><text x="1020" y="811">step 3</text>
+    </g>
+    <g>
+      <circle cx="1240" cy="420" r="60" fill="#22b8a6"/><circle cx="1240" cy="610" r="60" fill="#22b8a6"/><circle cx="1240" cy="800" r="60" fill="#ff5d73"/>
+    </g>
+    <g font-size="50" font-weight="900" fill="#fff" text-anchor="middle"><text x="1240" y="438">42</text><text x="1240" y="628">42</text><text x="1240" y="818">17</text></g>
+    <use href="sprites.svg#arrow" x="1320" y="580" width="160" height="48" style="--body:#1d2340"/>
+    <circle cx="1650" cy="605" r="160" fill="#fff"/>
+    <text x="1650" y="640" text-anchor="middle" font-size="110" font-weight="900" fill="#0f8a5f">42</text>
+    <use href="sprites.svg#check" x="1730" y="430" width="100" height="100"/>
+  </svg>
+  <div class="lbl dark" style="left:790px; top:330px">Chain-of-thought</div>
+  <div class="lbl green" style="left:1650px; top:840px">Majority vote</div>
+</section>
+
+<!-- 9 · decoding: probability bars -->
+<section class="slide t-night" style="--accent:#7c5cff">
+  <div class="cap"><span class="eyebrow">Lesson 2 · Decoding</span><h1>How a token <em>is picked</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <rect x="110" y="330" width="1180" height="570" rx="30" fill="#fff"/>
+    <text x="150" y="395" font-size="30" font-weight="800" fill="#4a5275">"First, try to …"   next-token probabilities</text>
+    <g font-size="36" font-weight="800" fill="#1d2340" text-anchor="end">
+      <text x="380" y="478">restart</text><text x="380" y="563">reboot</text><text x="380" y="648">check</text><text x="380" y="733">ping</text><text x="380" y="818">panic</text>
+    </g>
+    <rect x="410" y="440" width="640" height="54" rx="12" fill="#7c5cff"/>
+    <rect x="410" y="525" width="420" height="54" rx="12" fill="#7c5cff"/>
+    <rect x="410" y="610" width="260" height="54" rx="12" fill="#7c5cff"/>
+    <rect x="410" y="695" width="110" height="54" rx="12" fill="#c7cde6"/>
+    <rect x="410" y="780" width="50" height="54" rx="12" fill="#c7cde6"/>
+    <g font-size="30" font-weight="800" fill="#4a5275"><text x="1070" y="478">0.45</text><text x="850" y="563">0.28</text><text x="690" y="648">0.16</text><text x="540" y="733">0.07</text><text x="480" y="818">0.04</text></g>
+    <path d="M150 677 H1250" stroke="#ff5d73" stroke-width="6" stroke-dasharray="20 12"/>
+    <text x="1250" y="665" text-anchor="end" font-size="30" font-weight="900" fill="#ff5d73">top-p 0.9 cut</text>
+    <use href="#dial" x="1430" y="360" width="280" height="280" style="--knob:#ff7a59; --rot:50"/>
+    <text x="1570" y="700" text-anchor="middle" font-size="44" font-weight="900" fill="#fff">temperature</text>
+    <g font-size="30" font-weight="800" text-anchor="middle"><text x="1570" y="760" fill="#5cc8ff">low = focused</text><text x="1570" y="810" fill="#ffb089">high = creative</text></g>
+  </svg>
+</section>
+
+<!-- 10 · lab: feel the knobs -->
+<section class="slide t-sunrise" style="--accent:#e2533a">
+  <div class="cap"><span class="eyebrow">Lesson 2 · Lab</span><h1>Same prompt, <em>new settings</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <g fill="#fff"><rect x="110" y="340" width="530" height="470" rx="30"/><rect x="695" y="340" width="530" height="470" rx="30"/><rect x="1280" y="340" width="530" height="470" rx="30"/></g>
+    <g class="mono" font-size="30" font-weight="700" fill="#e2533a"><text class="mono" x="150" y="410">temperature=0</text><text class="mono" x="735" y="410">temperature=1.3</text><text class="mono" x="1320" y="410">stop=["\n\n"]</text></g>
+    <g>
+      <rect x="150" y="450" width="450" height="70" rx="14" fill="#7c5cff"/><rect x="150" y="540" width="450" height="70" rx="14" fill="#7c5cff"/><rect x="150" y="630" width="450" height="70" rx="14" fill="#7c5cff"/>
+      <rect x="735" y="450" width="450" height="70" rx="14" fill="#22b8a6"/><rect x="735" y="540" width="450" height="70" rx="14" fill="#ffb020"/><rect x="735" y="630" width="450" height="70" rx="14" fill="#ff6f9c"/>
+      <rect x="1320" y="450" width="450" height="70" rx="14" fill="#5cc8ff"/>
+      <rect x="1320" y="540" width="450" height="70" rx="14" fill="none" stroke="#c7cde6" stroke-width="5" stroke-dasharray="14 10"/>
+    </g>
+    <g font-size="30" font-weight="800" fill="#fff"><text x="180" y="496">run 1: restart nginx</text><text x="180" y="586">run 2: restart nginx</text><text x="180" y="676">run 3: restart nginx</text>
+      <text x="765" y="496">run 1: restart nginx</text><text x="765" y="586" fill="#1d2340">run 2: reload config</text><text x="765" y="676">run 3: ask a wizard</text>
+      <text x="1350" y="496">one short answer</text></g>
+    <text x="1545" y="586" text-anchor="middle" font-size="28" font-weight="800" fill="#9aa3c7">stopped here</text>
+    <g font-size="34" font-weight="900" fill="#1d2340" text-anchor="middle"><text x="375" y="770">deterministic</text><text x="960" y="770">diverse</text><text x="1545" y="770">bounded</text></g>
+  </svg>
+  <div class="lbl dark" style="left:960px; top:880px">seed · stop sequences · max_new_tokens</div>
+</section>
+
+<!-- 11 · structured output -->
+<section class="slide t-teal" style="--accent:#0b7f77">
+  <div class="cap"><span class="eyebrow">Lesson 2 · Structured output</span><h1>Guaranteed <em>JSON</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <rect x="110" y="340" width="520" height="480" rx="28" fill="#fff"/>
+    <text x="150" y="400" font-size="28" font-weight="900" fill="#4a5275" letter-spacing="3">SCHEMA</text>
+    <g class="mono" font-size="30" font-weight="700" fill="#1d2340">
+      <text class="mono" x="150" y="470">priority: P1|P2|P3</text>
+      <text class="mono" x="150" y="530">fix: string</text>
+      <text class="mono" x="150" y="590">source: string</text>
+    </g>
+    <use href="sprites.svg#checklist" x="400" y="620" width="150" height="180"/>
+    <use href="sprites.svg#robot" x="700" y="400" width="250" height="328" style="--body:#ffb020"/>
+    <g font-size="36" font-weight="900" text-anchor="middle">
+      <rect x="1000" y="380" width="200" height="80" rx="16" fill="#22c55e"/><text x="1100" y="434" fill="#fff">"P1"</text>
+      <rect x="1000" y="490" width="200" height="80" rx="16" fill="#22c55e"/><text x="1100" y="544" fill="#fff">"P2"</text>
+      <rect x="1000" y="600" width="200" height="80" rx="16" fill="#ff5d73" opacity=".45"/><text x="1100" y="654" fill="#fff">"urgent"</text>
+      <rect x="1000" y="710" width="200" height="80" rx="16" fill="#ff5d73" opacity=".45"/><text x="1100" y="764" fill="#fff">Sure!</text>
+    </g>
+    <path d="M990 640 L1210 640 M990 750 L1210 750" stroke="#fff" stroke-width="6"/>
+    <rect x="1280" y="380" width="540" height="410" rx="28" fill="#0b1630"/>
+    <g class="mono" font-size="30" font-weight="700">
+      <text class="mono" x="1320" y="450" fill="#fff">{</text>
+      <text class="mono" x="1350" y="510" fill="#5cc8ff">"priority": <tspan fill="#8bd346">"P1"</tspan>,</text>
+      <text class="mono" x="1350" y="570" fill="#5cc8ff">"fix": <tspan fill="#8bd346">"…"</tspan>,</text>
+      <text class="mono" x="1350" y="630" fill="#5cc8ff">"source": <tspan fill="#8bd346">"…"</tspan></text>
+      <text class="mono" x="1320" y="690" fill="#fff">}</text>
+    </g>
+    <use href="sprites.svg#check" x="1700" y="680" width="100" height="100"/>
+  </svg>
+  <div class="lbl amber" style="left:1100px; top:880px">vLLM guided decoding masks invalid tokens</div>
+</section>
+
+<!-- 12 · lesson 3: RAG ingestion -->
+<section class="slide t-rose" style="--accent:#d6336c">
+  <div class="cap"><span class="eyebrow">Lesson 3 · RAG</span><h1>Index <em>your own</em> documents</h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="#docstack" x="110" y="400" width="300" height="335" style="--accent:#d6336c"/>
+    <use href="sprites.svg#arrow" x="430" y="545" width="150" height="45" style="--body:#1d2340"/>
+    <g>
+      <use href="#chunk" x="610" y="380" width="200" height="117" style="--accent:#7c5cff"/>
+      <use href="#chunk" x="610" y="510" width="200" height="117" style="--accent:#22b8a6"/>
+      <use href="#chunk" x="610" y="640" width="200" height="117" style="--accent:#ffb020"/>
+    </g>
+    <use href="sprites.svg#arrow" x="830" y="545" width="150" height="45" style="--body:#1d2340"/>
+    <use href="#vec" x="1000" y="410" width="320" height="80"/>
+    <use href="#vec" x="1000" y="530" width="320" height="80"/>
+    <use href="#vec" x="1000" y="650" width="320" height="80"/>
+    <use href="sprites.svg#arrow" x="1340" y="545" width="150" height="45" style="--body:#1d2340"/>
+    <use href="sprites.svg#database" x="1520" y="400" width="270" height="306" style="--body:#d6336c"/>
+    <g font-size="36" font-weight="900" fill="#1d2340" text-anchor="middle"><text x="260" y="800">runbooks</text><text x="710" y="810">chunk</text><text x="1160" y="810">embed</text><text x="1655" y="770">index</text></g>
+  </svg>
+  <div class="lbl violet lg" style="left:1655px; top:860px">FAISS</div>
+</section>
+
+<!-- 13 · retrieve, rerank, cite -->
+<section class="slide t-sky" style="--accent:#1f6fbf">
+  <div class="cap"><span class="eyebrow">Lesson 3 · Retrieval</span><h1>Retrieve, rerank, <em>cite</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="#bubble" x="100" y="380" width="380" height="253"/>
+    <g font-size="34" font-weight="800" fill="#1d2340"><text x="140" y="460">Why does</text><text x="140" y="510">srv-db-02 lag?</text></g>
+    <g>
+      <rect x="560" y="330" width="250" height="90" rx="20" fill="#ffb020"/><text x="685" y="388" text-anchor="middle" font-size="32" font-weight="900" fill="#1d2340">BM25</text>
+      <rect x="560" y="660" width="250" height="90" rx="20" fill="#7c5cff"/><text x="685" y="718" text-anchor="middle" font-size="32" font-weight="900" fill="#fff">dense</text>
+    </g>
+    <g fill="none" stroke="#1d2340" stroke-width="7" stroke-linecap="round"><path d="M480 500 C 520 500, 520 375, 555 375"/><path d="M480 520 C 520 520, 520 705, 555 705"/><path d="M810 375 C 860 375, 860 530, 900 530"/><path d="M810 705 C 860 705, 860 560, 900 560"/></g>
+    <rect x="900" y="330" width="430" height="420" rx="28" fill="#fff"/>
+    <text x="1115" y="390" text-anchor="middle" font-size="30" font-weight="900" fill="#4a5275">reranked</text>
+    <use href="#chunk" x="940" y="420" width="240" height="140" style="--accent:#22c55e"/>
+    <use href="#chunk" x="940" y="580" width="240" height="140" style="--accent:#5cc8ff"/>
+    <g font-size="44" font-weight="900" fill="#1f6fbf"><text x="1210" y="510">[1]</text><text x="1210" y="670">[2]</text></g>
+    <use href="sprites.svg#arrow" x="1350" y="520" width="120" height="36" style="--body:#1d2340"/>
+    <use href="sprites.svg#robot" x="1500" y="370" width="270" height="354" style="--body:#22b8a6"/>
+  </svg>
+  <div class="lbl dark" style="left:685px; top:540px">fused</div>
+  <div class="lbl" style="left:1115px; top:830px">Exact names + paraphrases</div>
+</section>
+
+<!-- 14 · NVIDIA stack -->
+<section class="slide t-sand" style="--accent:#5a8c00">
+  <div class="cap"><span class="eyebrow">Lesson 3 · The NVIDIA stack</span><h1>NeMo Retriever <em>NIMs</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <rect x="110" y="340" width="1060" height="480" rx="34" fill="#76b900"/>
+    <text x="640" y="410" text-anchor="middle" font-size="44" font-weight="900" fill="#fff">NeMo Retriever</text>
+    <rect x="160" y="450" width="460" height="320" rx="26" fill="#fff"/>
+    <rect x="660" y="450" width="460" height="320" rx="26" fill="#fff"/>
+    <use href="#vec" x="230" y="500" width="320" height="80"/>
+    <use href="#vec" x="230" y="600" width="240" height="60"/>
+    <g>
+      <rect x="720" y="500" width="340" height="50" rx="12" fill="#22c55e"/><rect x="720" y="565" width="260" height="50" rx="12" fill="#5cc8ff"/><rect x="720" y="630" width="160" height="50" rx="12" fill="#c7cde6"/>
+    </g>
+    <g font-size="34" font-weight="900" fill="#1d2340" text-anchor="middle"><text x="390" y="735">Embedding NIM</text><text x="890" y="735">Reranking NIM</text></g>
+    <use href="sprites.svg#arrow" x="1190" y="555" width="130" height="40" style="--body:#1d2340"/>
+    <use href="sprites.svg#gpu" x="1350" y="380" width="230" height="150"/>
+    <use href="sprites.svg#robot" x="1600" y="420" width="220" height="289" style="--body:#76b900"/>
+    <use href="sprites.svg#shield" x="1390" y="570" width="140" height="161"/>
+    <text x="1600" y="790" text-anchor="middle" font-size="32" font-weight="900" fill="#1d2340">LLM NIM + grounding</text>
+  </svg>
+  <div class="lbl dark" style="left:640px; top:880px">Embed · rerank · serve on GPUs</div>
+</section>
+
+<!-- 15 · grounded result -->
+<section class="slide t-mint" style="--accent:#0f8a5f">
+  <div class="cap"><span class="eyebrow">Back to the IT team</span><h1>Grounded, cited, <em>valid</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <use href="sprites.svg#robot" x="110" y="400" width="300" height="394" style="--body:#22b8a6"/>
+    <use href="sprites.svg#sparkle" x="380" y="350" width="70" height="70"/>
+    <rect x="480" y="340" width="760" height="220" rx="28" fill="#fff"/>
+    <text x="520" y="420" font-size="40" font-weight="800" fill="#1d2340">Raise the replica buffer pool,</text>
+    <text x="520" y="480" font-size="40" font-weight="800" fill="#1d2340">then restart it. <tspan fill="#0f8a5f" font-weight="900">[runbook §4.2]</tspan></text>
+    <use href="sprites.svg#check" x="1150" y="300" width="100" height="100"/>
+    <rect x="480" y="600" width="760" height="200" rx="28" fill="#1d2340"/>
+    <text class="mono" x="520" y="690" font-size="32" font-weight="700" fill="#5cc8ff">{"priority": <tspan fill="#8bd346">"P2"</tspan>,</text>
+    <text class="mono" x="520" y="745" font-size="32" font-weight="700" fill="#5cc8ff"> "source": <tspan fill="#8bd346">"§4.2"</tspan>}</text>
+    <use href="sprites.svg#check" x="1150" y="700" width="100" height="100"/>
+    <use href="#bubble" x="1330" y="400" width="480" height="320" style="--body:#fff"/>
+    <g font-size="40" font-weight="900" fill="#1d2340"><text x="1390" y="500">"I don't know —</text><text x="1390" y="560">no runbook covers</text><text x="1390" y="620">that yet."</text></g>
+  </svg>
+  <div class="lbl teal" style="left:860px; top:870px">Cites its source</div>
+  <div class="lbl dark" style="left:1570px; top:870px">Honest when unsure</div>
+</section>
+
+<!-- 16 · outcome -->
+<section class="slide t-plum" style="--accent:#7b2ff7">
+  <div class="cap"><span class="eyebrow">What you'll be able to do</span><h1>Prompt, retrieve, <em>or fine-tune</em></h1></div>
+  <svg class="art" viewBox="0 0 1920 1080">
+    <g fill="#fff"><rect x="110" y="340" width="430" height="440" rx="30"/><rect x="590" y="340" width="430" height="440" rx="30"/><rect x="1070" y="340" width="430" height="440" rx="30"/></g>
+    <use href="sprites.svg#chat" x="215" y="390" width="220" height="174" style="--body:#ede6ff"/>
+    <use href="#docstack" x="710" y="380" width="170" height="190" style="--accent:#d6336c"/>
+    <use href="sprites.svg#gear" x="1215" y="400" width="150" height="150"/>
+    <g font-size="44" font-weight="900" fill="#1d2340" text-anchor="middle"><text x="325" y="660">Prompt</text><text x="805" y="660">Retrieve</text><text x="1285" y="660">Fine-tune</text></g>
+    <g font-size="28" font-weight="800" fill="#4a5275" text-anchor="middle"><text x="325" y="720">few-shot · CoT · JSON</text><text x="805" y="720">a working RAG pipeline</text><text x="1285" y="720">when the rest falls short</text></g>
+  </svg>
+  <div class="stat" style="left:1680px; top:540px; color:#ffcf4a"><b style="font-size:150px">13%</b><span style="color:#fff">of the exam</span></div>
+  <div class="lbl amber" style="left:960px; top:880px">Next · Lesson 1: Zero-, one- and few-shot prompting →</div>
+</section>
+
+</body>
+</html>

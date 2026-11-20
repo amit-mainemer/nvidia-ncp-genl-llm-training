@@ -1,0 +1,141 @@
+WEBVTT
+
+1
+00:00:00.300 --> 00:00:02.895
+Welcome to Module Six: Prompt Engineering.
+
+2
+00:00:03.225 --> 00:00:06.333
+It's about getting more out of a model without touching its weights.
+
+3
+00:00:07.133 --> 00:00:11.200
+Picture an IT team building an assistant for their internal runbooks.
+
+4
+00:00:11.530 --> 00:00:14.680
+There's no training budget, so fine-tuning is off the table.
+
+5
+00:00:15.480 --> 00:00:17.798
+Their first attempt is a one-line prompt.
+
+6
+00:00:18.128 --> 00:00:22.089
+The model rambles, invents a server name, and returns broken JSON.
+
+7
+00:00:22.889 --> 00:00:24.332
+None of that needs new weights.
+
+8
+00:00:24.662 --> 00:00:28.004
+It needs a better prompt, better decoding, and the right documents.
+
+9
+00:00:28.804 --> 00:00:31.229
+Lesson one starts with in-context learning.
+
+10
+00:00:31.559 --> 00:00:36.586
+A frozen model picks up a task from examples in its prompt, with no gradient update.
+
+11
+00:00:37.386 --> 00:00:41.688
+Zero-shot gives just the instruction, while few-shot adds worked examples.
+
+12
+00:00:42.018 --> 00:00:45.829
+How you choose and order those examples matters more than you'd expect.
+
+13
+00:00:46.629 --> 00:00:49.929
+Chat models expect system, user, and assistant roles.
+
+14
+00:00:50.259 --> 00:00:53.878
+The chat template turns them into the tokens the model was trained on.
+
+15
+00:00:54.678 --> 00:00:57.657
+Lesson two makes the model reason before it answers.
+
+16
+00:00:57.987 --> 00:00:59.787
+Chain-of-thought asks for steps,
+
+17
+00:00:59.837 --> 00:01:02.908
+and self-consistency samples several chains and votes.
+
+18
+00:01:03.708 --> 00:01:05.962
+Then you'll control how each token is picked.
+
+19
+00:01:06.292 --> 00:01:11.213
+Temperature reshapes probabilities, while top-k and top-p trim the unlikely tail.
+
+20
+00:01:12.013 --> 00:01:15.163
+In a short lab, you'll run one prompt under different settings.
+
+21
+00:01:15.493 --> 00:01:19.517
+Seeds, stop sequences, and token limits make results repeatable.
+
+22
+00:01:20.317 --> 00:01:23.382
+For the tickets, asking nicely for JSON isn't enough.
+
+23
+00:01:23.712 --> 00:01:29.422
+Constrained decoding in vLLM only allows tokens that keep the output schema-valid.
+
+24
+00:01:30.222 --> 00:01:35.335
+Lesson three adds your own documents with retrieval-augmented generation, or RAG.
+
+25
+00:01:35.665 --> 00:01:38.623
+You'll chunk runbooks, embed them, and index them with FAISS.
+
+26
+00:01:39.423 --> 00:01:42.329
+At question time, the closest chunks are retrieved,
+
+27
+00:01:42.379 --> 00:01:44.301
+reranked, and cited in the prompt.
+
+28
+00:01:44.631 --> 00:01:49.167
+Mixing keyword and dense search catches exact names and paraphrases alike.
+
+29
+00:01:49.967 --> 00:01:55.485
+NVIDIA's NeMo Retriever serves embedding and reranking models as NIM microservices.
+
+30
+00:01:55.815 --> 00:01:59.840
+Grounding instructions and citations keep answers tied to sources.
+
+31
+00:02:00.640 --> 00:02:05.369
+Now the assistant answers from the runbook, cites it, and returns valid JSON.
+
+32
+00:02:05.699 --> 00:02:08.593
+And when nothing relevant is found, it says it doesn't know.
+
+33
+00:02:09.393 --> 00:02:12.921
+By the end, you'll build a RAG pipeline and know when to prompt,
+
+34
+00:02:12.971 --> 00:02:14.207
+retrieve, or fine-tune.
+
+35
+00:02:14.537 --> 00:02:18.433
+Prompting is thirteen percent of the exam, so let's start with Lesson one.

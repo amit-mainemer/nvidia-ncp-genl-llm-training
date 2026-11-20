@@ -1,0 +1,153 @@
+{
+  "module": "gpu",
+  "title": "Module 3 intro — GPU Acceleration and Optimization",
+  "voice": "af_heart",
+  "speed": 1.05,
+  "scenes": [
+    {
+      "lines": [
+        "Welcome to Module Three: GPU Acceleration and Optimization.",
+        "Here you learn how language models are really trained on GPUs."
+      ],
+      "say": {
+        "0": "Welcome to Module Three: G P U Acceleration and Optimization.",
+        "1": "Here you learn how language models are really trained on G P Us."
+      }
+    },
+    {
+      "lines": [
+        "Picture a startup that has just rented eight H100s.",
+        "The plan: fully fine-tune a thirteen billion parameter model by Friday."
+      ],
+      "say": {
+        "0": "Picture a startup that has just rented eight H one hundreds."
+      }
+    },
+    {
+      "lines": [
+        "The first launch dies in seconds with an out-of-memory error.",
+        "Someone halves the batch size, and it crashes exactly the same way."
+      ]
+    },
+    {
+      "lines": [
+        "In bf16, the weights alone are only twenty-six gigabytes.",
+        "But AdamW also keeps gradients, a master copy, and two optimizer moments."
+      ],
+      "say": {
+        "0": "In B F sixteen, the weights alone are only twenty-six gigabytes.",
+        "1": "But Adam W also keeps gradients, a master copy, and two optimizer moments."
+      }
+    },
+    {
+      "lines": [
+        "That's sixteen bytes per parameter, about two hundred and eight gigabytes.",
+        "No single eighty gigabyte GPU holds that, whatever the batch size."
+      ],
+      "say": {
+        "1": "No single eighty gigabyte G P U holds that, whatever the batch size."
+      }
+    },
+    {
+      "lines": [
+        "Lesson one teaches this memory math, from optimizer states to the KV cache.",
+        "You'll write an estimator that answers \"will it fit?\" before you launch."
+      ],
+      "say": {
+        "0": "Lesson one teaches this memory math, from optimizer states to the K V cache."
+      }
+    },
+    {
+      "lines": [
+        "Lesson two adds mixed precision, gradient accumulation, and activation checkpointing.",
+        "FlashAttention and torch.compile then make every step faster."
+      ],
+      "say": {
+        "1": "Flash Attention and torch dot compile then make every step faster."
+      }
+    },
+    {
+      "lines": [
+        "In lesson three's lab, you'll pretrain a small Llama from scratch on TinyStories.",
+        "You'll watch the loss fall, then generate stories from your own checkpoint."
+      ],
+      "say": {
+        "0": "In lesson three's lab, you'll pretrain a small Lahma from scratch on Tiny Stories."
+      }
+    },
+    {
+      "lines": [
+        "Back at the startup, the real fix is sharding.",
+        "With FSDP or ZeRO, each GPU keeps only its own slice of the training state."
+      ],
+      "say": {
+        "1": "With F S D P or zero, each G P U keeps only its own slice of the training state."
+      }
+    },
+    {
+      "lines": [
+        "Lesson four starts with simple data parallelism, using DDP and torchrun.",
+        "Then come tensor and pipeline parallelism, for models too big for one GPU."
+      ],
+      "say": {
+        "0": "Lesson four starts with simple data parallelism, using D D P and torch run.",
+        "1": "Then come tensor and pipeline parallelism, for models too big for one G P U."
+      }
+    },
+    {
+      "lines": [
+        "Placement matters: tensor parallelism stays inside a node, on fast NVLink.",
+        "Pipeline stages and data-parallel replicas can stretch across nodes over InfiniBand."
+      ],
+      "say": {
+        "0": "Placement matters: tensor parallelism stays inside a node, on fast N V Link."
+      }
+    },
+    {
+      "lines": [
+        "The job finally runs, and the dashboard shows 100% GPU utilization.",
+        "Yet progress is slow, because the Tensor Cores are mostly waiting."
+      ],
+      "say": {
+        "0": "The job finally runs, and the dashboard shows one hundred percent G P U utilization."
+      }
+    },
+    {
+      "lines": [
+        "Lesson five measures real efficiency with model FLOPs utilization, or MFU.",
+        "You'll profile steps with PyTorch and Nsight to find the stalls."
+      ],
+      "say": {
+        "0": "Lesson five measures real efficiency with model flops utilization, or M F U.",
+        "1": "You'll profile steps with pie torch and N sight to find the stalls."
+      }
+    },
+    {
+      "lines": [
+        "You'll learn an ordered ladder of fixes for out-of-memory errors.",
+        "And you'll debug NaN losses, loss spikes, and NCCL hangs."
+      ],
+      "say": {
+        "1": "And you'll debug nan losses, loss spikes, and nickel hangs."
+      }
+    },
+    {
+      "lines": [
+        "This domain is fourteen percent of the exam.",
+        "Expect memory math, ZeRO stages, parallel layouts, and profiling scenarios."
+      ],
+      "say": {
+        "1": "Expect memory math, zero stages, parallel layouts, and profiling scenarios."
+      }
+    },
+    {
+      "lines": [
+        "By the end, you'll size, launch, scale, and debug a real training run.",
+        "Let's start with lesson one: GPU memory math."
+      ],
+      "say": {
+        "1": "Let's start with lesson one: G P U memory math."
+      }
+    }
+  ]
+}

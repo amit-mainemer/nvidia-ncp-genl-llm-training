@@ -1,0 +1,130 @@
+{
+  "module": "safety",
+  "title": "Module 10 intro — Safety, Ethics, and Compliance",
+  "voice": "af_heart",
+  "speed": 1.05,
+  "scenes": [
+    {
+      "lines": [
+        "Welcome to Module Ten: Safety, Ethics, and Compliance.",
+        "Alignment makes a model usually behave; this module makes sure it does."
+      ]
+    },
+    {
+      "lines": [
+        "Picture a travel company's booking assistant that reads web pages and calls tools.",
+        "In its first week, three things go wrong."
+      ]
+    },
+    {
+      "lines": [
+        "First, a user role-plays the bot into writing content it should refuse.",
+        "That's a jailbreak: attacking the model's own safety policy."
+      ]
+    },
+    {
+      "lines": [
+        "Second, a hotel page hides white text telling the bot to leak customer details.",
+        "That's indirect prompt injection, and the user was completely innocent."
+      ]
+    },
+    {
+      "lines": [
+        "Third, a customer's passport number turns up in the logs.",
+        "Nobody meant to store it, and nothing stopped it."
+      ]
+    },
+    {
+      "lines": [
+        "A system-prompt line saying \"ignore injected instructions\" fixes none of this.",
+        "The fix is architecture: guardrails that check what goes in and what comes out."
+      ]
+    },
+    {
+      "lines": [
+        "Lesson one builds those guardrails with NeMo Guardrails.",
+        "Input, dialog, retrieval, execution and output rails each catch different failures."
+      ],
+      "say": {
+        "0": "Lesson one builds those guardrails with nemo Guardrails."
+      }
+    },
+    {
+      "lines": [
+        "Safety classifiers like Llama Guard and NemoGuard label each turn safe or unsafe.",
+        "Colang flows keep conversations on topic, and tool calls need allow-lists."
+      ],
+      "say": {
+        "0": "Safety classifiers like Llama Guard and nemo Guard label each turn safe or unsafe.",
+        "1": "Coe-lang flows keep conversations on topic, and tool calls need allow-lists."
+      }
+    },
+    {
+      "lines": [
+        "PII is masked before it reaches the model, the answer or the logs.",
+        "And because every rail adds latency, you'll layer defences that stay fast."
+      ],
+      "say": {
+        "0": "P I I is masked before it reaches the model, the answer or the logs."
+      }
+    },
+    {
+      "lines": [
+        "Lesson two turns to responsible AI, starting with bias.",
+        "Swap only the name on identical CVs, and see whether the hiring advice changes."
+      ],
+      "say": {
+        "0": "Lesson two turns to responsible A I, starting with bias.",
+        "1": "Swap only the name on identical C Vs, and see whether the hiring advice changes."
+      }
+    },
+    {
+      "lines": [
+        "Counterfactual tests, fairness metrics and benchmarks like BBQ turn a worry into a number.",
+        "Mitigations then span data, training, inference and monitoring."
+      ],
+      "say": {
+        "0": "Counterfactual tests, fairness metrics and benchmarks like B B Q turn a worry into a number."
+      }
+    },
+    {
+      "lines": [
+        "Next comes red teaming: attacking your own system before anyone else does.",
+        "Scanners like garak fire thousands of probes, and humans find the creative failures."
+      ],
+      "say": {
+        "1": "Scanners like gah-rack fire thousands of probes, and humans find the creative failures."
+      }
+    },
+    {
+      "lines": [
+        "Every model ships with a model card: intended use, limits, and results by group.",
+        "And licenses follow the weights and data into your fine-tune."
+      ]
+    },
+    {
+      "lines": [
+        "Regulation depends on how a model is used.",
+        "Under the EU AI Act, a writing helper is limited risk, but screening job applicants is high risk."
+      ],
+      "say": {
+        "1": "Under the E U A I Act, a writing helper is limited risk, but screening job applicants is high risk."
+      }
+    },
+    {
+      "lines": [
+        "So compliance is monitored continuously: guardrail blocks, refusals and outcomes by group.",
+        "And every model or prompt change triggers a fresh audit."
+      ]
+    },
+    {
+      "lines": [
+        "By the end, you'll wrap an LLM in guardrails, audit it for bias, red-team it, and document it.",
+        "Let's start with lesson one: guardrails."
+      ],
+      "say": {
+        "0": "By the end, you'll wrap an L L M in guardrails, audit it for bias, red-team it, and document it."
+      }
+    }
+  ]
+}

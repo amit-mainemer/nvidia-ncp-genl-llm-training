@@ -1,0 +1,134 @@
+{
+  "module": "optimization",
+  "title": "Module 7 intro — Model Optimization",
+  "voice": "af_heart",
+  "speed": 1.05,
+  "scenes": [
+    {
+      "lines": [
+        "Welcome to Module Seven: Model Optimization.",
+        "Here, a trained model becomes smaller, faster, and cheaper to serve."
+      ]
+    },
+    {
+      "lines": [
+        "Picture a team that just fine-tuned an eight-billion-parameter support assistant.",
+        "It aces every test, so they launch it."
+      ],
+      "say": {
+        "0": "Picture a team that just fine-tuned an eight billion parameter support assistant."
+      }
+    },
+    {
+      "lines": [
+        "On launch day, the GPU bill arrives before the praise.",
+        "Each replica needs a whole H100, and answers crawl once fifty people chat at once."
+      ],
+      "say": {
+        "0": "On launch day, the G P U bill arrives before the praise.",
+        "1": "Each replica needs a whole H one hundred, and answers crawl once fifty people chat at once."
+      }
+    },
+    {
+      "lines": [
+        "The model isn't too dumb; it's too heavy.",
+        "Every token streams sixteen gigabytes of weights through memory."
+      ]
+    },
+    {
+      "lines": [
+        "The first fix is quantization: fewer bits per weight.",
+        "FP8 halves the bytes and INT4 quarters them, with little accuracy lost."
+      ],
+      "say": {
+        "1": "F P eight halves the bytes and int four quarters them, with little accuracy lost."
+      }
+    },
+    {
+      "lines": [
+        "You'll compute the scales that map real values onto a few levels.",
+        "Then you'll compare GPTQ, AWQ, and SmoothQuant, and measure the trade-off."
+      ],
+      "say": {
+        "1": "Then you'll compare G P T Q, A W Q, and Smooth Quant, and measure the trade-off."
+      }
+    },
+    {
+      "lines": [
+        "The second route is fewer parameters.",
+        "Structured pruning removes whole layers or channels."
+      ]
+    },
+    {
+      "lines": [
+        "Then the original model teaches the pruned one to recover, which is NVIDIA's Minitron recipe.",
+        "Its students beat same-size models trained from scratch."
+      ],
+      "say": {
+        "0": "Then the original model teaches the pruned one to recover, which is NVIDIA's Mini-tron recipe."
+      }
+    },
+    {
+      "lines": [
+        "Next, you'll look inside the inference engine.",
+        "Prefill reads the prompt in one compute-heavy pass, then decode writes tokens one by one, limited by memory."
+      ]
+    },
+    {
+      "lines": [
+        "Every token leaves keys and values behind in the KV cache.",
+        "Its size decides how many users fit on one GPU."
+      ],
+      "say": {
+        "0": "Every token leaves keys and values behind in the K V cache.",
+        "1": "Its size decides how many users fit on one G P U."
+      }
+    },
+    {
+      "lines": [
+        "Paged attention stores that cache in small blocks, so little is wasted.",
+        "In-flight batching lets new requests join the moment others finish."
+      ]
+    },
+    {
+      "lines": [
+        "Speculative decoding lets a fast draft guess several tokens ahead.",
+        "The big model checks them in one pass, so the output is identical, just quicker."
+      ]
+    },
+    {
+      "lines": [
+        "Then you'll build engines with TensorRT-LLM, NVIDIA's fast inference library.",
+        "You'll set its cache and batch limits, and serve it behind Triton."
+      ],
+      "say": {
+        "0": "Then you'll build engines with Tensor R T L L M, NVIDIA's fast inference library."
+      }
+    },
+    {
+      "lines": [
+        "Finally, you'll benchmark with trtllm-bench and tune.",
+        "Time to first token, time per output token, and throughput pull against each other."
+      ],
+      "say": {
+        "0": "Finally, you'll benchmark with T R T L L M bench and tune."
+      }
+    },
+    {
+      "lines": [
+        "For our team, FP8 weights and in-flight batching changed everything.",
+        "The same model now serves several times the users per GPU."
+      ],
+      "say": {
+        "0": "For our team, F P eight weights and in-flight batching changed everything.",
+        "1": "The same model now serves several times the users per G P U."
+      }
+    },
+    {
+      "lines": [
+        "This is the largest exam domain, and you'll leave able to make any model lean and fast.",
+        "Lesson one is the quantization lab, so let's shrink some weights."
+      ]
+    }
+  ]
+}

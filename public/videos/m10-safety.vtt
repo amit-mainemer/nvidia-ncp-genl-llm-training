@@ -1,0 +1,145 @@
+WEBVTT
+
+1
+00:00:00.300 --> 00:00:03.749
+Welcome to Module Ten: Safety, Ethics, and Compliance.
+
+2
+00:00:04.079 --> 00:00:08.210
+Alignment makes a model usually behave; this module makes sure it does.
+
+3
+00:00:09.010 --> 00:00:13.845
+Picture a travel company's booking assistant that reads web pages and calls tools.
+
+4
+00:00:14.175 --> 00:00:16.301
+In its first week, three things go wrong.
+
+5
+00:00:17.101 --> 00:00:21.297
+First, a user role-plays the bot into writing content it should refuse.
+
+6
+00:00:21.627 --> 00:00:24.969
+That's a jailbreak: attacking the model's own safety policy.
+
+7
+00:00:25.769 --> 00:00:30.711
+Second, a hotel page hides white text telling the bot to leak customer details.
+
+8
+00:00:31.041 --> 00:00:34.980
+That's indirect prompt injection, and the user was completely innocent.
+
+9
+00:00:35.780 --> 00:00:38.823
+Third, a customer's passport number turns up in the logs.
+
+10
+00:00:39.153 --> 00:00:41.599
+Nobody meant to store it, and nothing stopped it.
+
+11
+00:00:42.399 --> 00:00:47.085
+A system-prompt line saying "ignore injected instructions" fixes none of this.
+
+12
+00:00:47.415 --> 00:00:51.760
+The fix is architecture: guardrails that check what goes in and what comes out.
+
+13
+00:00:52.560 --> 00:00:55.987
+Lesson one builds those guardrails with NeMo Guardrails.
+
+14
+00:00:56.317 --> 00:01:01.643
+Input, dialog, retrieval, execution and output rails each catch different failures.
+
+15
+00:01:02.443 --> 00:01:07.833
+Safety classifiers like Llama Guard and NemoGuard label each turn safe or unsafe.
+
+16
+00:01:08.163 --> 00:01:12.743
+Colang flows keep conversations on topic, and tool calls need allow-lists.
+
+17
+00:01:13.543 --> 00:01:17.695
+PII is masked before it reaches the model, the answer or the logs.
+
+18
+00:01:18.025 --> 00:01:22.178
+And because every rail adds latency, you'll layer defences that stay fast.
+
+19
+00:01:22.978 --> 00:01:26.320
+Lesson two turns to responsible AI, starting with bias.
+
+20
+00:01:26.650 --> 00:01:31.763
+Swap only the name on identical CVs, and see whether the hiring advice changes.
+
+21
+00:01:32.563 --> 00:01:33.927
+Counterfactual tests,
+
+22
+00:01:33.977 --> 00:01:38.507
+fairness metrics and benchmarks like BBQ turn a worry into a number.
+
+23
+00:01:38.837 --> 00:01:42.499
+Mitigations then span data, training, inference and monitoring.
+
+24
+00:01:43.299 --> 00:01:47.409
+Next comes red teaming: attacking your own system before anyone else does.
+
+25
+00:01:47.739 --> 00:01:52.660
+Scanners like garak fire thousands of probes, and humans find the creative failures.
+
+26
+00:01:53.460 --> 00:01:58.317
+Every model ships with a model card: intended use, limits, and results by group.
+
+27
+00:01:58.647 --> 00:02:02.053
+And licenses follow the weights and data into your fine-tune.
+
+28
+00:02:02.853 --> 00:02:05.512
+Regulation depends on how a model is used.
+
+29
+00:02:05.842 --> 00:02:09.380
+Under the EU AI Act, a writing helper is limited risk,
+
+30
+00:02:09.430 --> 00:02:12.171
+but screening job applicants is high risk.
+
+31
+00:02:12.971 --> 00:02:15.471
+So compliance is monitored continuously:
+
+32
+00:02:15.521 --> 00:02:18.595
+guardrail blocks, refusals and outcomes by group.
+
+33
+00:02:18.925 --> 00:02:21.819
+And every model or prompt change triggers a fresh audit.
+
+34
+00:02:22.619 --> 00:02:25.449
+By the end, you'll wrap an LLM in guardrails,
+
+35
+00:02:25.499 --> 00:02:28.521
+audit it for bias, red-team it, and document it.
+
+36
+00:02:28.851 --> 00:02:31.127
+Let's start with lesson one: guardrails.

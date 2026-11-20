@@ -1,0 +1,129 @@
+{
+  "module": "data",
+  "title": "Module 2 intro — Data Preparation",
+  "voice": "af_heart",
+  "speed": 1.05,
+  "scenes": [
+    {
+      "lines": [
+        "Welcome to Module Two: Data Preparation.",
+        "Open models differ a little in architecture, but a lot in data."
+      ]
+    },
+    {
+      "lines": [
+        "Picture a small team that scrapes web text and trains their first model.",
+        "The early results look exciting, then the problems show."
+      ]
+    },
+    {
+      "lines": [
+        "It recites cookie banners, repeats spam, and once prints a customer's email.",
+        "And it aces a benchmark whose answers were in the training data."
+      ]
+    },
+    {
+      "lines": [
+        "Fine-tuned as a chat assistant, it answers well, then never stops talking.",
+        "Every one of these is a data bug, not a model bug."
+      ]
+    },
+    {
+      "lines": [
+        "It starts with the tokenizer, because the model only ever sees integer ids.",
+        "It sets sequence length, embedding size, and how well code and languages work."
+      ],
+      "say": {
+        "0": "It starts with the tokenizer, because the model only ever sees integer I Ds."
+      }
+    },
+    {
+      "lines": [
+        "Lesson one traces BPE, merging the most frequent pair each time.",
+        "In the lab, you'll train an 8,000-token vocabulary and compare it with GPT-2's."
+      ],
+      "say": {
+        "0": "Lesson one traces B P E, merging the most frequent pair each time.",
+        "1": "In the lab, you'll train an eight thousand token vocabulary and compare it with G P T two's."
+      }
+    },
+    {
+      "lines": [
+        "You'll add new tokens without breaking the model.",
+        "And you'll see how the end-of-sequence token decides when a model stops."
+      ]
+    },
+    {
+      "lines": [
+        "Lesson two turns raw web crawl into training tokens.",
+        "Extract, identify language, filter, deduplicate, redact, and decontaminate."
+      ],
+      "say": {
+        "1": "Extract, identify language, filter, de-duplicate, redact, and decontaminate."
+      }
+    },
+    {
+      "lines": [
+        "Heuristic filters catch boilerplate and junk, while classifiers score quality.",
+        "Tune them carefully: aggressive filters can erase dialects and minority voices."
+      ]
+    },
+    {
+      "lines": [
+        "Exact duplicates are easy to hash, but near-duplicates need MinHash.",
+        "You'll tune its bands and rows to set the similarity threshold."
+      ],
+      "say": {
+        "0": "Exact duplicates are easy to hash, but near duplicates need min hash."
+      }
+    },
+    {
+      "lines": [
+        "Regular expressions redact emails, phone numbers and other identifiers.",
+        "And 13-gram overlap checks remove benchmark questions, keeping scores honest."
+      ],
+      "say": {
+        "1": "And thirteen gram overlap checks remove benchmark questions, keeping scores honest."
+      }
+    },
+    {
+      "lines": [
+        "At scale, NVIDIA NeMo Curator runs the same steps on GPUs.",
+        "You'll learn the ideas on a laptop, then see them scale."
+      ],
+      "say": {
+        "0": "At scale, N vidia Nemo Curator runs the same steps on G P Us."
+      }
+    },
+    {
+      "lines": [
+        "Lesson three turns conversations into fine-tuning data.",
+        "You'll unify Alpaca, ShareGPT and messages formats, then apply a chat template."
+      ],
+      "say": {
+        "1": "You'll unify Alpaca, Share G P T and messages formats, then apply a chat template."
+      }
+    },
+    {
+      "lines": [
+        "You'll mask prompt tokens out of the loss, so the model learns to answer.",
+        "And you'll fix the padding bug behind the chatbot that never stopped."
+      ]
+    },
+    {
+      "lines": [
+        "Packing short examples into one sequence saves the compute padding would waste.",
+        "Done right, one conversation never leaks into the next."
+      ]
+    },
+    {
+      "lines": [
+        "By the end, you'll have trained a tokenizer, built a cleaning pipeline, and prepared chat data.",
+        "Let's begin with lesson one: tokenizers, BPE and special tokens."
+      ],
+      "say": {
+        "1": "Let's begin with lesson one: tokenizers, B P E, and special tokens."
+      }
+    }
+  ]
+}

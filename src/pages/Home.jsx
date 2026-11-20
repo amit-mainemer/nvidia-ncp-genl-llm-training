@@ -123,7 +123,7 @@ export default function Home() {
       <section className="wrap" style={{ marginTop: 44 }}>
         <h2>How to use this site</h2>
         <div className="grid g3">
-          <Step n="1" t="Read, then build" d="Read each lesson, then run its lab — the code is complete and runs on a free Colab GPU or a single 24 GB card. Technical terms are underlined: hover or tap for a definition and a note on how the term is tested. Every lesson ends with a five-question check." />
+          <Step n="1" t="Read, then build" d="Watch the module's narrated intro video, read each lesson, then run its lab — the code is complete and runs on a free Colab GPU or a single 24 GB card. Technical terms are underlined: hover or tap for a definition and a note on how the term is tested. Every lesson ends with a five-question check." />
           <Step n="2" t="Take the module quiz" d="Immediate feedback with an explanation of the correct answer AND why each distractor fails. The distractor analysis is where the real learning is." />
           <Step n="3" t="Sit a timed mock" d={`${examBank.length} questions you have not seen in the modules, scored by domain against a 120-minute clock. Use the domain breakdown to decide what to re-read.`} />
         </div>

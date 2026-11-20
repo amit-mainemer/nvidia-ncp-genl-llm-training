@@ -1,0 +1,133 @@
+WEBVTT
+
+1
+00:00:00.300 --> 00:00:02.831
+Welcome to Module Eight: Model Deployment.
+
+2
+00:00:03.161 --> 00:00:06.781
+Here, your fine-tuned model becomes a real production API.
+
+3
+00:00:07.581 --> 00:00:11.008
+Picture a small team whose model works beautifully in a notebook.
+
+4
+00:00:11.338 --> 00:00:15.512
+Then sales signs three customers, and each wants an endpoint by Friday.
+
+5
+00:00:16.312 --> 00:00:19.953
+The first attempt is a Python script on one GPU server.
+
+6
+00:00:20.283 --> 00:00:23.945
+It falls over under load, and nobody knows how fast it really is.
+
+7
+00:00:24.745 --> 00:00:30.263
+Lesson one serves the model with vLLM, behind an OpenAI-compatible API.
+
+8
+00:00:30.593 --> 00:00:33.785
+You'll call it with curl and Python, just like a hosted model.
+
+9
+00:00:34.585 --> 00:00:36.882
+Each customer has its own LoRA adapter.
+
+10
+00:00:37.212 --> 00:00:41.130
+Merge one into the weights for speed, or serve many on one shared base.
+
+11
+00:00:41.930 --> 00:00:46.403
+You'll also run NVIDIA NIM, a container with an optimized engine inside.
+
+12
+00:00:46.733 --> 00:00:50.587
+And you'll lay out a Triton model repository with dynamic batching.
+
+13
+00:00:51.387 --> 00:00:54.238
+Lesson two makes it reproducible with containers.
+
+14
+00:00:54.568 --> 00:00:58.691
+The NVIDIA Container Toolkit passes GPUs into Docker,
+
+15
+00:00:58.741 --> 00:01:01.131
+and NGC supplies tested images.
+
+16
+00:01:01.931 --> 00:01:06.084
+On Kubernetes, the GPU Operator makes GPUs schedulable.
+
+17
+00:01:06.414 --> 00:01:10.993
+Pods request GPUs, pass health probes, and load weights from a shared cache.
+
+18
+00:01:11.793 --> 00:01:16.266
+Small models can share one GPU with MIG slices or time-slicing.
+
+19
+00:01:16.596 --> 00:01:19.426
+Each gets its own piece, and the hardware stays busy.
+
+20
+00:01:20.226 --> 00:01:23.163
+Scaling is where LLMs break the usual rules.
+
+21
+00:01:23.493 --> 00:01:28.712
+CPU usage says little, so you'll autoscale on queue depth or KV cache usage.
+
+22
+00:01:29.512 --> 00:01:31.681
+Lesson three asks: how fast is it?
+
+23
+00:01:32.011 --> 00:01:34.691
+For a language model, there are at least four answers.
+
+24
+00:01:35.491 --> 00:01:40.561
+Time to first token is responsiveness, and time per output token is streaming speed.
+
+25
+00:01:40.891 --> 00:01:45.279
+Throughput counts all tokens, and goodput counts only those that met your target.
+
+26
+00:01:46.079 --> 00:01:50.103
+As concurrency rises, throughput climbs while each user waits longer.
+
+27
+00:01:50.433 --> 00:01:52.623
+You'll measure that curve with GenAI-Perf.
+
+28
+00:01:53.423 --> 00:01:56.211
+Then Little's law turns the measurement into a fleet size.
+
+29
+00:01:56.541 --> 00:02:00.907
+From a traffic forecast and a latency target, you'll count the GPUs you need.
+
+30
+00:02:01.707 --> 00:02:05.646
+For our team, Friday arrives with three endpoints on one shared cluster.
+
+31
+00:02:05.976 --> 00:02:09.019
+Each scales on its own, with a latency it can promise.
+
+32
+00:02:09.819 --> 00:02:15.060
+You'll leave able to serve, containerize, scale, and size a real LLM deployment.
+
+33
+00:02:15.390 --> 00:02:18.796
+Lesson one puts your model behind an API, so let's serve it.

@@ -1,0 +1,143 @@
+{
+  "module": "deployment",
+  "title": "Module 8 intro — Model Deployment",
+  "voice": "af_heart",
+  "speed": 1.05,
+  "scenes": [
+    {
+      "lines": [
+        "Welcome to Module Eight: Model Deployment.",
+        "Here, your fine-tuned model becomes a real production API."
+      ],
+      "say": {
+        "1": "Here, your fine-tuned model becomes a real production A P I."
+      }
+    },
+    {
+      "lines": [
+        "Picture a small team whose model works beautifully in a notebook.",
+        "Then sales signs three customers, and each wants an endpoint by Friday."
+      ]
+    },
+    {
+      "lines": [
+        "The first attempt is a Python script on one GPU server.",
+        "It falls over under load, and nobody knows how fast it really is."
+      ],
+      "say": {
+        "0": "The first attempt is a Python script on one G P U server."
+      }
+    },
+    {
+      "lines": [
+        "Lesson one serves the model with vLLM, behind an OpenAI-compatible API.",
+        "You'll call it with curl and Python, just like a hosted model."
+      ],
+      "say": {
+        "0": "Lesson one serves the model with V L L M, behind an Open A I compatible A P I."
+      }
+    },
+    {
+      "lines": [
+        "Each customer has its own LoRA adapter.",
+        "Merge one into the weights for speed, or serve many on one shared base."
+      ],
+      "say": {
+        "0": "Each customer has its own Lora adapter."
+      }
+    },
+    {
+      "lines": [
+        "You'll also run NVIDIA NIM, a container with an optimized engine inside.",
+        "And you'll lay out a Triton model repository with dynamic batching."
+      ],
+      "say": {
+        "0": "You'll also run NVIDIA nim, a container with an optimized engine inside."
+      }
+    },
+    {
+      "lines": [
+        "Lesson two makes it reproducible with containers.",
+        "The NVIDIA Container Toolkit passes GPUs into Docker, and NGC supplies tested images."
+      ],
+      "say": {
+        "1": "The NVIDIA Container Toolkit passes G P Us into Docker, and N G C supplies tested images."
+      }
+    },
+    {
+      "lines": [
+        "On Kubernetes, the GPU Operator makes GPUs schedulable.",
+        "Pods request GPUs, pass health probes, and load weights from a shared cache."
+      ],
+      "say": {
+        "0": "On Kubernetes, the G P U Operator makes G P Us schedulable.",
+        "1": "Pods request G P Us, pass health probes, and load weights from a shared cache."
+      }
+    },
+    {
+      "lines": [
+        "Small models can share one GPU with MIG slices or time-slicing.",
+        "Each gets its own piece, and the hardware stays busy."
+      ],
+      "say": {
+        "0": "Small models can share one G P U with mig slices or time-slicing."
+      }
+    },
+    {
+      "lines": [
+        "Scaling is where LLMs break the usual rules.",
+        "CPU usage says little, so you'll autoscale on queue depth or KV cache usage."
+      ],
+      "say": {
+        "0": "Scaling is where L L Ms break the usual rules.",
+        "1": "C P U usage says little, so you'll autoscale on queue depth or K V cache usage."
+      }
+    },
+    {
+      "lines": [
+        "Lesson three asks: how fast is it?",
+        "For a language model, there are at least four answers."
+      ]
+    },
+    {
+      "lines": [
+        "Time to first token is responsiveness, and time per output token is streaming speed.",
+        "Throughput counts all tokens, and goodput counts only those that met your target."
+      ]
+    },
+    {
+      "lines": [
+        "As concurrency rises, throughput climbs while each user waits longer.",
+        "You'll measure that curve with GenAI-Perf."
+      ],
+      "say": {
+        "1": "You'll measure that curve with Gen A I Perf."
+      }
+    },
+    {
+      "lines": [
+        "Then Little's law turns the measurement into a fleet size.",
+        "From a traffic forecast and a latency target, you'll count the GPUs you need."
+      ],
+      "say": {
+        "1": "From a traffic forecast and a latency target, you'll count the G P Us you need."
+      }
+    },
+    {
+      "lines": [
+        "For our team, Friday arrives with three endpoints on one shared cluster.",
+        "Each scales on its own, with a latency it can promise."
+      ]
+    },
+    {
+      "lines": [
+        "You'll leave able to serve, containerize, scale, and size a real LLM deployment.",
+        "Lesson one puts your model behind an API, so let's serve it."
+      ],
+      "say": {
+        "0": "You'll leave able to serve, containerize, scale, and size a real L L M deployment.",
+        "1": "Lesson one puts your model behind an A P I, so let's serve it."
+      }
+    }
+  ]
+}

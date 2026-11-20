@@ -21,7 +21,7 @@ export default function Module() {
         <Link to="/roadmap">Roadmap</Link> <span>/</span> <span>Module {mod.n}</span>
       </div>
 
-      <span className="eyebrow" style={{ color: d.color }}>Domain {mod.n} · {mod.weight}% of the exam</span>
+      <span className="eyebrow" style={{ color: d.color }}>Module {mod.n} · {mod.weight}% of the exam (official domain {d.official})</span>
       <h1>{mod.title}</h1>
       <p className="hero-sub">{mod.blurb}</p>
 

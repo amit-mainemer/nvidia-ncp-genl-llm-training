@@ -17,6 +17,7 @@ Sister projects: [NCP-AAI Academy](https://amit-mainemer.github.io/nvidia-aai-ce
 | | |
 |---|---|
 | **10 modules, 34 lessons** | One module per official exam domain, ordered the way you actually build a model |
+| **Module intro videos** | A narrated ~2-minute illustrated intro for every module, with subtitles |
 | **Hands-on labs** | Build a GPT from scratch, train a BPE tokenizer, pretrain a small LLM, SFT, LoRA/QLoRA, DPO, lm-eval-harness, quantization, serve with vLLM/NIM — complete runnable code, most on a free Colab T4 |
 | **Lesson checks** | Five questions at the end of every lesson; passing marks the lesson complete |
 | **Module quizzes** | Exam-style questions per module with explanations and distractor analysis |
@@ -69,6 +70,7 @@ src/data/exam/*.js          65-question mock exam bank, one file per domain
 src/data/glossary/*.js      glossary (core + per module)
 src/data/resources.js       official training, reading list, study plans, exam-day tips
 tools/CURRICULUM.md         authoring spec
+tools/video/                module intro video pipeline (see tools/video/README.md)
 ```
 
 ## Deployment

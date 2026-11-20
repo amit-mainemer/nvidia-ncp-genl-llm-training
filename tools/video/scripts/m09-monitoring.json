@@ -1,0 +1,135 @@
+{
+  "module": "monitoring",
+  "title": "Module 9 intro — Production Monitoring and Reliability",
+  "voice": "af_heart",
+  "speed": 1.05,
+  "scenes": [
+    {
+      "lines": [
+        "Welcome to Module Nine: Production Monitoring and Reliability.",
+        "Your model is deployed; now it has to keep working for real users, every day."
+      ]
+    },
+    {
+      "lines": [
+        "Picture a phone company's support bot, the morning after a big marketing campaign.",
+        "Traffic triples, and customers say the bot feels slow."
+      ]
+    },
+    {
+      "lines": [
+        "The dashboard shows TTFT jumping from under half a second to three seconds.",
+        "Yet time per output token is flat, and errors haven't moved."
+      ],
+      "say": {
+        "0": "The dashboard shows time to first token jumping from under half a second to three seconds."
+      }
+    },
+    {
+      "lines": [
+        "That pattern points at the queue: requests wait before prefill even starts.",
+        "Queue depth had been climbing for twenty minutes, with no alert."
+      ],
+      "say": {
+        "0": "That pattern points at the queue: requests wait before pre-fill even starts."
+      }
+    },
+    {
+      "lines": [
+        "They scale out, and two weeks later a quieter problem appears.",
+        "Every dashboard is green, yet customer satisfaction keeps falling."
+      ]
+    },
+    {
+      "lines": [
+        "A new plan has launched, and users ask questions the bot has never seen.",
+        "GPU metrics can't see wrong answers; drift and quality checks can."
+      ],
+      "say": {
+        "1": "G P U metrics can't see wrong answers; drift and quality checks can."
+      }
+    },
+    {
+      "lines": [
+        "This module teaches you to catch both kinds of failure early.",
+        "Lesson one starts with the golden signals of LLM serving."
+      ],
+      "say": {
+        "1": "Lesson one starts with the golden signals of L L M serving."
+      }
+    },
+    {
+      "lines": [
+        "You'll track TTFT, time per token, queue depth, KV-cache use and errors.",
+        "Always as percentiles, because averages hide the slow tail."
+      ],
+      "say": {
+        "0": "You'll track time to first token, time per token, queue depth, K V cache use and errors."
+      }
+    },
+    {
+      "lines": [
+        "Prometheus scrapes vLLM, Triton, NIM and the DCGM exporter, and Grafana draws the dashboards.",
+        "Alert on symptoms users feel, then diagnose with causes like GPU Xid errors."
+      ],
+      "say": {
+        "0": "Prometheus scrapes V L L M, Triton, nim and the D C G M exporter, and Grafana draws the dashboards.",
+        "1": "Alert on symptoms users feel, then diagnose with causes like G P U zid errors."
+      }
+    },
+    {
+      "lines": [
+        "Logs and traces show which request failed, and where.",
+        "OpenTelemetry follows it through retriever and model, and PII is redacted before anything is stored."
+      ],
+      "say": {
+        "1": "Open Telemetry follows it through retriever and model, and P I I is redacted before anything is stored."
+      }
+    },
+    {
+      "lines": [
+        "Then you'll detect drift in prompt length, topics and embeddings.",
+        "An LLM judge scores a small sample of live answers, to catch silent quality drops."
+      ],
+      "say": {
+        "1": "An L L M judge scores a small sample of live answers, to catch silent quality drops."
+      }
+    },
+    {
+      "lines": [
+        "Lesson two covers the model lifecycle.",
+        "A version bundles weights, tokenizer, chat template, prompts and generation settings in a registry."
+      ]
+    },
+    {
+      "lines": [
+        "Every candidate must pass the same regression suite as production.",
+        "Then it rolls out gradually: shadow traffic first, then a small canary."
+      ]
+    },
+    {
+      "lines": [
+        "If the canary's scores slip, traffic swings back to the previous version, still warm.",
+        "Rollback should be fast, rehearsed and boring."
+      ]
+    },
+    {
+      "lines": [
+        "Quality drops, drift and user feedback trigger a reproducible retraining pipeline.",
+        "But stale facts are fixed by updating the RAG index, not the weights."
+      ],
+      "say": {
+        "1": "But stale facts are fixed by updating the rag index, not the weights."
+      }
+    },
+    {
+      "lines": [
+        "By the end, you'll build LLM dashboards with SLO alerts, catch drift, and ship new versions safely.",
+        "Let's begin with lesson one: observability."
+      ],
+      "say": {
+        "0": "By the end, you'll build L L M dashboards with S L O alerts, catch drift, and ship new versions safely."
+      }
+    }
+  ]
+}

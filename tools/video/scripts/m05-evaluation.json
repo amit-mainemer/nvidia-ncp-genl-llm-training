@@ -1,0 +1,128 @@
+{
+  "module": "evaluation",
+  "title": "Module 5 intro — Evaluation",
+  "voice": "af_heart",
+  "speed": 1.05,
+  "scenes": [
+    {
+      "lines": [
+        "Welcome to Module Five: Evaluation.",
+        "It's about measuring what your model can actually do."
+      ]
+    },
+    {
+      "lines": [
+        "Picture a team that fine-tunes a small model for customer support.",
+        "Validation loss falls, the demo looks great, and they ship on Friday."
+      ]
+    },
+    {
+      "lines": [
+        "By Monday, the tickets are piling up.",
+        "The answers sound confident, but they quote the wrong refund policy."
+      ]
+    },
+    {
+      "lines": [
+        "Worse, a benchmark score jumped, and nobody can explain why.",
+        "Some test questions had leaked into the training data."
+      ]
+    },
+    {
+      "lines": [
+        "The fix isn't one magic number.",
+        "It's a set of measurements, each matched to a question."
+      ]
+    },
+    {
+      "lines": [
+        "Lesson one starts with the metrics.",
+        "Loss curves show whether training worked, and perplexity turns loss into an intuitive number."
+      ]
+    },
+    {
+      "lines": [
+        "BLEU and ROUGE count words that overlap with a reference answer.",
+        "But overlap can't see a wrong number, so a fluent, false answer still scores well."
+      ],
+      "say": {
+        "0": "Blue and rouge count words that overlap with a reference answer."
+      }
+    },
+    {
+      "lines": [
+        "When answers are checkable, use exact match, or pass@k, which runs generated code against tests.",
+        "Multiple-choice benchmarks score each option by its log-likelihood."
+      ],
+      "say": {
+        "0": "When answers are checkable, use exact match, or pass at k, which runs generated code against tests.",
+        "1": "Multiple-choice benchmarks score each option by its log likelihood."
+      }
+    },
+    {
+      "lines": [
+        "Lesson two is a hands-on lab with lm-evaluation-harness.",
+        "You'll benchmark a model before and after fine-tuning, on MMLU, HellaSwag, and GSM8K."
+      ],
+      "say": {
+        "0": "Lesson two is a hands-on lab with the L M evaluation harness.",
+        "1": "You'll benchmark a model before and after fine-tuning, on M M L U, Hella Swag, and G S M eight K."
+      }
+    },
+    {
+      "lines": [
+        "You'll see which knobs silently change the numbers, like shot count and chat template.",
+        "Between runs, change exactly one thing: the model."
+      ]
+    },
+    {
+      "lines": [
+        "And you'll catch contamination by checking n-gram overlap with benchmark questions.",
+        "At scale, NeMo Evaluator runs these checks against any served model."
+      ],
+      "say": {
+        "0": "And you'll catch contamination by checking N gram overlap with benchmark questions.",
+        "1": "At scale, Nemo Evaluator runs these checks against any served model."
+      }
+    },
+    {
+      "lines": [
+        "Lesson three tackles open-ended answers with no single reference.",
+        "An LLM judge scores them with a rubric, and swapping answer order cancels position bias."
+      ],
+      "say": {
+        "1": "An L L M judge scores them with a rubric, and swapping answer order cancels position bias."
+      }
+    },
+    {
+      "lines": [
+        "A judge is a model too, so you check it against human labels.",
+        "Cohen's kappa measures agreement beyond pure chance."
+      ]
+    },
+    {
+      "lines": [
+        "For RAG systems, you evaluate retrieval and generation separately.",
+        "Faithfulness asks whether every claim is backed by the retrieved context."
+      ],
+      "say": {
+        "0": "For rag systems, you evaluate retrieval and generation separately."
+      }
+    },
+    {
+      "lines": [
+        "Error analysis turns scores into fixes, and a domain eval set runs in CI on every change.",
+        "That would have caught the refund bug before Friday."
+      ],
+      "say": {
+        "0": "Error analysis turns scores into fixes, and a domain eval set runs in C I on every change."
+      }
+    },
+    {
+      "lines": [
+        "By the end, you'll benchmark, judge, and gate your own fine-tuned model.",
+        "Evaluation is seven percent of the exam, so let's start with Lesson one: metrics."
+      ]
+    }
+  ]
+}

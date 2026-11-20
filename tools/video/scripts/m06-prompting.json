@@ -1,0 +1,130 @@
+{
+  "module": "prompting",
+  "title": "Module 6 intro — Prompt Engineering",
+  "voice": "af_heart",
+  "speed": 1.05,
+  "scenes": [
+    {
+      "lines": [
+        "Welcome to Module Six: Prompt Engineering.",
+        "It's about getting more out of a model without touching its weights."
+      ]
+    },
+    {
+      "lines": [
+        "Picture an IT team building an assistant for their internal runbooks.",
+        "There's no training budget, so fine-tuning is off the table."
+      ],
+      "say": {
+        "0": "Picture an I T team building an assistant for their internal runbooks."
+      }
+    },
+    {
+      "lines": [
+        "Their first attempt is a one-line prompt.",
+        "The model rambles, invents a server name, and returns broken JSON."
+      ],
+      "say": {
+        "1": "The model rambles, invents a server name, and returns broken jason."
+      }
+    },
+    {
+      "lines": [
+        "None of that needs new weights.",
+        "It needs a better prompt, better decoding, and the right documents."
+      ]
+    },
+    {
+      "lines": [
+        "Lesson one starts with in-context learning.",
+        "A frozen model picks up a task from examples in its prompt, with no gradient update."
+      ]
+    },
+    {
+      "lines": [
+        "Zero-shot gives just the instruction, while few-shot adds worked examples.",
+        "How you choose and order those examples matters more than you'd expect."
+      ]
+    },
+    {
+      "lines": [
+        "Chat models expect system, user, and assistant roles.",
+        "The chat template turns them into the tokens the model was trained on."
+      ]
+    },
+    {
+      "lines": [
+        "Lesson two makes the model reason before it answers.",
+        "Chain-of-thought asks for steps, and self-consistency samples several chains and votes."
+      ]
+    },
+    {
+      "lines": [
+        "Then you'll control how each token is picked.",
+        "Temperature reshapes probabilities, while top-k and top-p trim the unlikely tail."
+      ],
+      "say": {
+        "1": "Temperature reshapes probabilities, while top K and top P trim the unlikely tail."
+      }
+    },
+    {
+      "lines": [
+        "In a short lab, you'll run one prompt under different settings.",
+        "Seeds, stop sequences, and token limits make results repeatable."
+      ]
+    },
+    {
+      "lines": [
+        "For the tickets, asking nicely for JSON isn't enough.",
+        "Constrained decoding in vLLM only allows tokens that keep the output schema-valid."
+      ],
+      "say": {
+        "0": "For the tickets, asking nicely for jason isn't enough.",
+        "1": "Constrained decoding in V L L M only allows tokens that keep the output schema valid."
+      }
+    },
+    {
+      "lines": [
+        "Lesson three adds your own documents with retrieval-augmented generation, or RAG.",
+        "You'll chunk runbooks, embed them, and index them with FAISS."
+      ],
+      "say": {
+        "0": "Lesson three adds your own documents with retrieval augmented generation, or rag.",
+        "1": "You'll chunk runbooks, embed them, and index them with face."
+      }
+    },
+    {
+      "lines": [
+        "At question time, the closest chunks are retrieved, reranked, and cited in the prompt.",
+        "Mixing keyword and dense search catches exact names and paraphrases alike."
+      ]
+    },
+    {
+      "lines": [
+        "NVIDIA's NeMo Retriever serves embedding and reranking models as NIM microservices.",
+        "Grounding instructions and citations keep answers tied to sources."
+      ],
+      "say": {
+        "0": "NVIDIA's Nemo Retriever serves embedding and reranking models as nim microservices."
+      }
+    },
+    {
+      "lines": [
+        "Now the assistant answers from the runbook, cites it, and returns valid JSON.",
+        "And when nothing relevant is found, it says it doesn't know."
+      ],
+      "say": {
+        "0": "Now the assistant answers from the runbook, cites it, and returns valid jason."
+      }
+    },
+    {
+      "lines": [
+        "By the end, you'll build a RAG pipeline and know when to prompt, retrieve, or fine-tune.",
+        "Prompting is thirteen percent of the exam, so let's start with Lesson one."
+      ],
+      "say": {
+        "0": "By the end, you'll build a rag pipeline and know when to prompt, retrieve, or fine-tune."
+      }
+    }
+  ]
+}

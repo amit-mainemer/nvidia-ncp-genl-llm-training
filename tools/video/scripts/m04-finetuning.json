@@ -1,0 +1,141 @@
+{
+  "module": "finetuning",
+  "title": "Module 4 intro — Fine-Tuning",
+  "voice": "af_heart",
+  "speed": 1.05,
+  "scenes": [
+    {
+      "lines": [
+        "Welcome to Module Four: Fine-Tuning.",
+        "You'll learn when to fine-tune, and how to do it well on one GPU."
+      ],
+      "say": {
+        "1": "You'll learn when to fine-tune, and how to do it well on one G P U."
+      }
+    },
+    {
+      "lines": [
+        "Picture an insurance company whose support assistant keeps going off script.",
+        "It rambles, ignores the house tone, and breaks the ticket format."
+      ]
+    },
+    {
+      "lines": [
+        "The team's first instinct is to fine-tune it on every policy document.",
+        "But policies change weekly, so the model would be stale by Monday."
+      ]
+    },
+    {
+      "lines": [
+        "Lesson one sorts the levers, from prompting and RAG to full fine-tuning.",
+        "Missing knowledge needs retrieval; behaviour, format, and style need fine-tuning."
+      ],
+      "say": {
+        "0": "Lesson one sorts the levers, from prompting and rag to full fine-tuning."
+      }
+    },
+    {
+      "lines": [
+        "So the team keeps RAG for facts, and fine-tunes for behaviour.",
+        "Lesson two's lab runs supervised fine-tuning of a small Qwen model with TRL."
+      ],
+      "say": {
+        "0": "So the team keeps rag for facts, and fine-tunes for behaviour.",
+        "1": "Lesson two's lab runs supervised fine-tuning of a small Chwen model with T R L."
+      }
+    },
+    {
+      "lines": [
+        "You'll train only on the assistant's replies, with the right chat template.",
+        "Then you'll compare outputs before and after, and read the loss curves."
+      ]
+    },
+    {
+      "lines": [
+        "But fully fine-tuning a seven billion parameter model needs over a hundred gigabytes.",
+        "That's where LoRA comes in."
+      ],
+      "say": {
+        "1": "That's where lora comes in."
+      }
+    },
+    {
+      "lines": [
+        "LoRA freezes the base model and trains two small matrices beside each layer.",
+        "Only a tiny fraction of the weights learn, and the adapter is just megabytes."
+      ],
+      "say": {
+        "0": "Lora freezes the base model and trains two small matrices beside each layer."
+      }
+    },
+    {
+      "lines": [
+        "QLoRA goes further, loading the frozen base in four-bit precision.",
+        "In the lab, you'll QLoRA-tune Qwen on a free Colab T4, then merge the adapter."
+      ],
+      "say": {
+        "0": "Cue lora goes further, loading the frozen base in four-bit precision.",
+        "1": "In the lab, you'll cue lora tune Chwen on a free Colab T four, then merge the adapter."
+      }
+    },
+    {
+      "lines": [
+        "Now the format is right, but reviewers still prefer some answers over others.",
+        "Lesson four turns those preferences into a training signal."
+      ]
+    },
+    {
+      "lines": [
+        "Classic RLHF trains a reward model, then optimizes with PPO.",
+        "DPO skips the reward model and learns straight from chosen and rejected pairs."
+      ],
+      "say": {
+        "0": "Classic R L H F trains a reward model, then optimizes with P P O.",
+        "1": "D P O skips the reward model and learns straight from chosen and rejected pairs."
+      }
+    },
+    {
+      "lines": [
+        "GRPO scores a group of sampled answers against each other.",
+        "With checkable rewards it's powerful, but watch for reward hacking."
+      ],
+      "say": {
+        "0": "G R P O scores a group of sampled answers against each other."
+      }
+    },
+    {
+      "lines": [
+        "Lesson five maps it all to NVIDIA NeMo, at cluster scale.",
+        "You'll compare p-tuning, adapters, IA3, and LoRA by where they add parameters."
+      ],
+      "say": {
+        "0": "Lesson five maps it all to En-vidia Nemo, at cluster scale.",
+        "1": "You'll compare P tuning, adapters, I A three, and lora by where they add parameters."
+      }
+    },
+    {
+      "lines": [
+        "You'll also guard against catastrophic forgetting, where new skills erase old ones.",
+        "Lower learning rates, fewer epochs, and mixed-in general data protect old skills."
+      ]
+    },
+    {
+      "lines": [
+        "Fine-tuning is thirteen percent of the exam.",
+        "Expect method choice, LoRA memory math, and DPO versus RLHF."
+      ],
+      "say": {
+        "1": "Expect method choice, lora memory math, and D P O versus R L H F."
+      }
+    },
+    {
+      "lines": [
+        "By the end, you'll fine-tune, align, and ship a small model on a single GPU.",
+        "Let's begin with lesson one: choosing an adaptation method."
+      ],
+      "say": {
+        "0": "By the end, you'll fine-tune, align, and ship a small model on a single G P U."
+      }
+    }
+  ]
+}

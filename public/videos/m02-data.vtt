@@ -1,0 +1,133 @@
+WEBVTT
+
+1
+00:00:00.300 --> 00:00:02.874
+Welcome to Module Two: Data Preparation.
+
+2
+00:00:03.204 --> 00:00:06.887
+Open models differ a little in architecture, but a lot in data.
+
+3
+00:00:07.687 --> 00:00:11.541
+Picture a small team that scrapes web text and trains their first model.
+
+4
+00:00:11.871 --> 00:00:14.851
+The early results look exciting, then the problems show.
+
+5
+00:00:15.651 --> 00:00:20.102
+It recites cookie banners, repeats spam, and once prints a customer's email.
+
+6
+00:00:20.432 --> 00:00:23.795
+And it aces a benchmark whose answers were in the training data.
+
+7
+00:00:24.595 --> 00:00:28.727
+Fine-tuned as a chat assistant, it answers well, then never stops talking.
+
+8
+00:00:29.057 --> 00:00:31.844
+Every one of these is a data bug, not a model bug.
+
+9
+00:00:32.644 --> 00:00:37.522
+It starts with the tokenizer, because the model only ever sees integer ids.
+
+10
+00:00:37.852 --> 00:00:42.218
+It sets sequence length, embedding size, and how well code and languages work.
+
+11
+00:00:43.018 --> 00:00:47.277
+Lesson one traces BPE, merging the most frequent pair each time.
+
+12
+00:00:47.607 --> 00:00:53.296
+In the lab, you'll train an 8,000-token vocabulary and compare it with GPT-2's.
+
+13
+00:00:54.096 --> 00:00:56.585
+You'll add new tokens without breaking the model.
+
+14
+00:00:56.915 --> 00:01:00.555
+And you'll see how the end-of-sequence token decides when a model stops.
+
+15
+00:01:01.355 --> 00:01:04.292
+Lesson two turns raw web crawl into training tokens.
+
+16
+00:01:04.622 --> 00:01:09.543
+Extract, identify language, filter, deduplicate, redact, and decontaminate.
+
+17
+00:01:10.343 --> 00:01:14.773
+Heuristic filters catch boilerplate and junk, while classifiers score quality.
+
+18
+00:01:15.103 --> 00:01:19.895
+Tune them carefully: aggressive filters can erase dialects and minority voices.
+
+19
+00:01:20.695 --> 00:01:25.019
+Exact duplicates are easy to hash, but near-duplicates need MinHash.
+
+20
+00:01:25.349 --> 00:01:28.584
+You'll tune its bands and rows to set the similarity threshold.
+
+21
+00:01:29.384 --> 00:01:33.750
+Regular expressions redact emails, phone numbers and other identifiers.
+
+22
+00:01:34.080 --> 00:01:38.894
+And 13-gram overlap checks remove benchmark questions, keeping scores honest.
+
+23
+00:01:39.694 --> 00:01:44.209
+At scale, NVIDIA NeMo Curator runs the same steps on GPUs.
+
+24
+00:01:44.539 --> 00:01:47.412
+You'll learn the ideas on a laptop, then see them scale.
+
+25
+00:01:48.212 --> 00:01:51.533
+Lesson three turns conversations into fine-tuning data.
+
+26
+00:01:51.863 --> 00:01:57.274
+You'll unify Alpaca, ShareGPT and messages formats, then apply a chat template.
+
+27
+00:01:58.074 --> 00:02:01.843
+You'll mask prompt tokens out of the loss, so the model learns to answer.
+
+28
+00:02:02.173 --> 00:02:05.600
+And you'll fix the padding bug behind the chatbot that never stopped.
+
+29
+00:02:06.400 --> 00:02:10.659
+Packing short examples into one sequence saves the compute padding would waste.
+
+30
+00:02:10.989 --> 00:02:13.969
+Done right, one conversation never leaks into the next.
+
+31
+00:02:14.769 --> 00:02:17.085
+By the end, you'll have trained a tokenizer,
+
+32
+00:02:17.135 --> 00:02:19.775
+built a cleaning pipeline, and prepared chat data.
+
+33
+00:02:20.105 --> 00:02:24.641
+Let's begin with lesson one: tokenizers, BPE and special tokens.
